@@ -39,6 +39,37 @@ const getAIClient = () => {
   return new GoogleGenAI({ apiKey });
 };
 
+// Robust JSON parser that attempts to fix common LLM syntax errors
+const cleanAndParseJSON = (text: string): FWAReport => {
+  // 1. Remove Markdown code blocks
+  let jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+  // 2. Extract the main JSON object (first '{' to last '}')
+  const start = jsonStr.indexOf('{');
+  const end = jsonStr.lastIndexOf('}');
+  
+  if (start !== -1 && end !== -1) {
+    jsonStr = jsonStr.substring(start, end + 1);
+  } else {
+    throw new Error("No valid JSON object found in the response.");
+  }
+
+  // 3. Auto-repair common syntax errors
+  // Fix: Missing commas between objects in arrays (e.g., "...}" "{...")
+  jsonStr = jsonStr.replace(/}\s*\{/g, '}, {');
+  // Fix: Missing commas between arrays and keys (e.g., "...]" "key"...)
+  jsonStr = jsonStr.replace(/]\s*"/g, '], "');
+  // Fix: Trailing commas before closing braces/brackets (e.g., "..., }")
+  jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1');
+
+  try {
+    return JSON.parse(jsonStr) as FWAReport;
+  } catch (error: any) {
+    console.error("JSON Parse failed. Raw text snippet:", jsonStr.substring(0, 200) + "...");
+    throw new Error(`Failed to parse report data: ${error.message}. The AI response was malformed.`);
+  }
+};
+
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
   const ai = getAIClient();
   
@@ -47,6 +78,12 @@ export const generateFWAReport = async (country: string, operator: string, langu
     The output language must be ${language}.
     
     You must use Google Search to find real, up-to-date spectrum allocations, market challenges, and competitor data for this specific operator.
+    
+    CRITICAL INSTRUCTIONS FOR JSON OUTPUT:
+    1. Output strictly valid JSON only.
+    2. Return the JSON as a SINGLE LINE string (minified) to avoid parsing issues with newlines.
+    3. ESCAPE all double quotes inside string values (e.g., "insight": "The \\"best\\" strategy...").
+    4. Do NOT use markdown formatting.
     
     For every section, you must provide a detailed analysis that includes:
     1. "insight": A comprehensive paragraph analyzing the current situation and context.
@@ -65,8 +102,6 @@ export const generateFWAReport = async (country: string, operator: string, langu
     8. ROI Analysis Model (Assumptions and financial viability).
     9. Operations & O&M (TR-069/USP).
 
-    Return ONLY the raw JSON string matching the structure below. Do not wrap in markdown code blocks.
-    
     Structure:
     {
       "operatorName": "string",
@@ -99,41 +134,25 @@ export const generateFWAReport = async (country: string, operator: string, langu
   `;
 
   try {
-    // Switch to gemini-2.5-flash for better stability and speed.
-    // Thinking mode removed to prevent timeouts in web contexts.
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        // Note: responseMimeType is NOT allowed when using googleSearch tool
+        // responseMimeType is NOT allowed when using googleSearch tool
       }
     });
 
-    let text = response.text;
+    const text = response.text;
     
     if (!text) {
         throw new Error("No content generated. The model may have been blocked or failed to respond.");
     }
 
-    // Clean up Markdown code blocks if present (e.g., ```json ... ```)
-    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    
-    // Robust JSON extraction: Find the first '{' and last '}'
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    
-    if (start !== -1 && end !== -1) {
-      text = text.substring(start, end + 1);
-    } else {
-      console.error("Invalid JSON format received:", text);
-      throw new Error("The AI response was not valid JSON. Please try again.");
-    }
+    return cleanAndParseJSON(text);
 
-    return JSON.parse(text) as FWAReport;
   } catch (error: any) {
     console.error("Error generating report:", error);
-    // enhance error message for UI
     if (error.message.includes("API Key is missing")) {
         throw error;
     }
@@ -162,7 +181,7 @@ export const chatWithInsight = async (
   `;
 
   const chat = ai.chats.create({
-    model: 'gemini-2.5-flash', // Matched model for consistency
+    model: 'gemini-2.5-flash',
     config: {
       systemInstruction: systemContext,
     },
