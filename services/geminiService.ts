@@ -4,8 +4,16 @@ import { FWAReport, Language, ChatMessage } from "../types";
 // NOTE: We initialize the AI client inside the functions to prevent 
 // "process is not defined" errors at module load time in some client-side environments.
 
+const getAIClient = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    throw new Error("API_KEY is missing. Please ensure it is set in your environment variables (e.g., .env file or Vercel settings).");
+  }
+  return new GoogleGenAI({ apiKey });
+};
+
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = getAIClient();
   
   const prompt = `
     Generate a highly detailed strategic Fixed Wireless Access (FWA) insight report for the operator "${operator}" in the country "${country}".
@@ -64,16 +72,25 @@ export const generateFWAReport = async (country: string, operator: string, langu
   `;
 
   try {
+    // Switch to gemini-2.5-flash for better stability and speed.
+    // Thinking mode removed to prevent timeouts in web contexts.
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        thinkingConfig: { thinkingBudget: 32768 } // Max thinking budget for deep analysis
+        // Note: responseMimeType is NOT allowed when using googleSearch tool
       }
     });
 
-    let text = response.text || "";
+    let text = response.text;
+    
+    if (!text) {
+        throw new Error("No content generated. The model may have been blocked or failed to respond.");
+    }
+
+    // Clean up Markdown code blocks if present (e.g., ```json ... ```)
+    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
     
     // Robust JSON extraction: Find the first '{' and last '}'
     const start = text.indexOf('{');
@@ -82,13 +99,18 @@ export const generateFWAReport = async (country: string, operator: string, langu
     if (start !== -1 && end !== -1) {
       text = text.substring(start, end + 1);
     } else {
-      throw new Error("Invalid JSON response format from AI");
+      console.error("Invalid JSON format received:", text);
+      throw new Error("The AI response was not valid JSON. Please try again.");
     }
 
     return JSON.parse(text) as FWAReport;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error generating report:", error);
-    throw error;
+    // enhance error message for UI
+    if (error.message.includes("API_KEY")) {
+        throw error;
+    }
+    throw new Error(error.message || "An unexpected error occurred during analysis.");
   }
 };
 
@@ -99,7 +121,7 @@ export const chatWithInsight = async (
   language: Language
 ): Promise<string> => {
   
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = getAIClient();
 
   const systemContext = `
     You are an expert Telecom Consultant AI. You are discussing a specific FWA Strategy Report for ${reportContext.operatorName} in ${reportContext.country}.
@@ -113,7 +135,7 @@ export const chatWithInsight = async (
   `;
 
   const chat = ai.chats.create({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-2.5-flash', // Matched model for consistency
     config: {
       systemInstruction: systemContext,
     },

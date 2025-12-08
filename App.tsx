@@ -20,8 +20,9 @@ const App: React.FC = () => {
     try {
       const data = await generateFWAReport(country, operator, lang);
       setReport(data);
-    } catch (err) {
-      setError("Failed to generate report. Please try again later or check your network.");
+    } catch (err: any) {
+      // Display the actual error message
+      setError(err.message || "Failed to generate report. Please try again later or check your network.");
     } finally {
       setLoading(false);
     }
@@ -78,11 +79,15 @@ const App: React.FC = () => {
             )}
 
             {error && (
-              <div className="max-w-xl mx-auto mt-12 p-4 bg-red-50 text-red-700 border border-red-200 rounded-lg text-center">
-                <p>{error}</p>
+              <div className="max-w-xl mx-auto mt-12 p-6 bg-red-50 text-red-700 border border-red-200 rounded-xl text-center shadow-sm">
+                <div className="flex justify-center mb-4">
+                    <span className="bg-red-100 p-3 rounded-full">⚠️</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Analysis Failed</h3>
+                <p className="mb-6">{error}</p>
                 <button 
                   onClick={() => setError(null)}
-                  className="mt-4 text-sm font-semibold hover:underline"
+                  className="px-6 py-2 bg-white border border-red-200 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition-colors"
                 >
                   Try Again
                 </button>
