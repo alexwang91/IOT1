@@ -5,9 +5,36 @@ import { FWAReport, Language, ChatMessage } from "../types";
 // "process is not defined" errors at module load time in some client-side environments.
 
 const getAIClient = () => {
-  const apiKey = process.env.API_KEY;
+  // Attempt to retrieve the API key from various common environment variable patterns.
+  // Frontend build tools (Vite, CRA) typically require variables to start with VITE_ or REACT_APP_
+  // to be exposed to the client-side browser bundle.
+  
+  let viteKey = undefined;
+  try {
+    // @ts-ignore - Handle Vite's import.meta.env if available
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+       // @ts-ignore
+       viteKey = import.meta.env.VITE_API_KEY;
+    }
+  } catch (e) {
+    // Ignore errors if import.meta is not supported in the environment
+  }
+
+  const apiKey = 
+    process.env.API_KEY || 
+    process.env.VITE_API_KEY || 
+    process.env.REACT_APP_API_KEY || 
+    viteKey;
+
   if (!apiKey) {
-    throw new Error("API_KEY is missing. Please ensure it is set in your environment variables (e.g., .env file or Vercel settings).");
+    throw new Error(
+      "API Key is missing.\n\n" +
+      "If you are deploying on Vercel:\n" +
+      "1. Go to Settings > Environment Variables.\n" +
+      "2. Rename your variable from 'API_KEY' to 'VITE_API_KEY'.\n" +
+      "3. Redeploy the application.\n\n" +
+      "Security Note: Frontend build tools hide variables by default. They must be prefixed with 'VITE_' (for Vite) or 'REACT_APP_' (for Create React App) to be visible in the browser."
+    );
   }
   return new GoogleGenAI({ apiKey });
 };
@@ -107,7 +134,7 @@ export const generateFWAReport = async (country: string, operator: string, langu
   } catch (error: any) {
     console.error("Error generating report:", error);
     // enhance error message for UI
-    if (error.message.includes("API_KEY")) {
+    if (error.message.includes("API Key is missing")) {
         throw error;
     }
     throw new Error(error.message || "An unexpected error occurred during analysis.");
