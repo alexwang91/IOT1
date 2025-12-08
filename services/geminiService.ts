@@ -1,9 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// NOTE: We initialize the AI client inside the functions to prevent 
+// "process is not defined" errors at module load time in some client-side environments.
 
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   const prompt = `
     Generate a highly detailed strategic Fixed Wireless Access (FWA) insight report for the operator "${operator}" in the country "${country}".
     The output language must be ${language}.
@@ -96,6 +99,8 @@ export const chatWithInsight = async (
   language: Language
 ): Promise<string> => {
   
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
   const systemContext = `
     You are an expert Telecom Consultant AI. You are discussing a specific FWA Strategy Report for ${reportContext.operatorName} in ${reportContext.country}.
     Language: ${language}.

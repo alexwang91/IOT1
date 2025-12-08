@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TelcoInsight AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Polyfill process.env to avoid "process is not defined" ReferenceError in client-side builds (Vercel/Vite)
+      window.process = window.process || { env: { NODE_ENV: 'production' } };
+    </script>
     <style>
       /* Custom Scrollbar for a cleaner dashboard look */
       ::-webkit-scrollbar {
