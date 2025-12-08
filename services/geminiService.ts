@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
@@ -71,14 +70,16 @@ export const generateFWAReport = async (country: string, operator: string, langu
       }
     });
 
-    let text = response.text;
-    if (!text) throw new Error("No response generated");
+    let text = response.text || "";
     
-    // Cleanup potential markdown formatting
-    if (text.startsWith('```json')) {
-      text = text.replace(/^```json\n/, '').replace(/\n```$/, '');
-    } else if (text.startsWith('```')) {
-      text = text.replace(/^```\n/, '').replace(/\n```$/, '');
+    // Robust JSON extraction: Find the first '{' and last '}'
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    
+    if (start !== -1 && end !== -1) {
+      text = text.substring(start, end + 1);
+    } else {
+      throw new Error("Invalid JSON response format from AI");
     }
 
     return JSON.parse(text) as FWAReport;

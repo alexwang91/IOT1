@@ -78,18 +78,21 @@ const AnalysisList = ({ items, type }: { items: string[], type: 'strength' | 'ch
 };
 
 // Component to render a full Strategic Analysis block
-const AnalysisBlock: React.FC<{ data: StrategicAnalysis }> = ({ data }) => (
-  <div className="mb-10 last:mb-0">
-    <h3 className="text-lg font-bold text-slate-900 mb-3">{data.title}</h3>
-    <p className="text-slate-600 mb-5 leading-7 text-sm md:text-base border-l-4 border-slate-200 pl-4">{data.insight}</p>
-    
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <AnalysisList items={data.strengths} type="strength" />
-      <AnalysisList items={data.challenges} type="challenge" />
-      <AnalysisList items={data.recommendations} type="recommendation" />
+const AnalysisBlock: React.FC<{ data: StrategicAnalysis }> = ({ data }) => {
+  if (!data) return null;
+  return (
+    <div className="mb-10 last:mb-0">
+      <h3 className="text-lg font-bold text-slate-900 mb-3">{data.title}</h3>
+      <p className="text-slate-600 mb-5 leading-7 text-sm md:text-base border-l-4 border-slate-200 pl-4">{data.insight}</p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <AnalysisList items={data.strengths} type="strength" />
+        <AnalysisList items={data.challenges} type="challenge" />
+        <AnalysisList items={data.recommendations} type="recommendation" />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 interface ReportViewProps {
   report: FWAReport;
@@ -103,7 +106,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
       <Card className="lg:col-span-12">
         <SectionHeader icon={AlertTriangle} title="1. Pain Points & Market Challenges" />
         <div className="space-y-6">
-          {report.painPoints.map((item, idx) => (
+          {report.painPoints?.map((item, idx) => (
             <AnalysisBlock key={idx} data={item} />
           ))}
         </div>
@@ -113,7 +116,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
       <Card className="lg:col-span-12">
         <SectionHeader icon={Crosshair} title="2. FWA Strategic Positioning" />
         <div className="space-y-6">
-          {report.strategicPositioning.map((item, idx) => (
+          {report.strategicPositioning?.map((item, idx) => (
             <AnalysisBlock key={idx} data={item} />
           ))}
         </div>
@@ -123,11 +126,11 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
       <Card className="lg:col-span-12">
         <SectionHeader icon={Target} title="3. Value Proposition Analysis" />
         <div className="space-y-8">
-           <AnalysisBlock data={report.valueProposition.consumer} />
+           {report.valueProposition?.consumer && <AnalysisBlock data={report.valueProposition.consumer} />}
            <hr className="border-slate-100" />
-           <AnalysisBlock data={report.valueProposition.enterprise} />
+           {report.valueProposition?.enterprise && <AnalysisBlock data={report.valueProposition.enterprise} />}
            <hr className="border-slate-100" />
-           <AnalysisBlock data={report.valueProposition.operator} />
+           {report.valueProposition?.operator && <AnalysisBlock data={report.valueProposition.operator} />}
         </div>
       </Card>
 
@@ -135,10 +138,10 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
       <Card className="lg:col-span-12">
         <SectionHeader icon={Radio} title="4. Spectrum Landscape & Strategy" />
         <div className="mb-8">
-          <p className="text-slate-600 mb-6">{report.spectrumAnalysis.overview}</p>
-          <SpectrumChart data={report.spectrumAnalysis.bands} />
+          <p className="text-slate-600 mb-6">{report.spectrumAnalysis?.overview}</p>
+          {report.spectrumAnalysis?.bands && <SpectrumChart data={report.spectrumAnalysis.bands} />}
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-             {report.spectrumAnalysis.bands.map((b, i) => (
+             {report.spectrumAnalysis?.bands?.map((b, i) => (
                <div key={i} className="text-xs bg-slate-50 p-3 rounded-lg border border-slate-200">
                  <span className="font-bold block text-slate-800 text-sm mb-1">{b.band}</span>
                  <div className="flex justify-between text-slate-500 mb-1">
@@ -154,7 +157,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
           </div>
         </div>
         <div className="mt-8 pt-6 border-t border-slate-100">
-          <AnalysisBlock data={report.spectrumAnalysis.detailedAnalysis} />
+          <AnalysisBlock data={report.spectrumAnalysis?.detailedAnalysis} />
         </div>
       </Card>
 
@@ -164,7 +167,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
         <div className="grid lg:grid-cols-3 gap-8">
            <div className="lg:col-span-1 space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
               <h4 className="font-bold text-slate-700 mb-2">Priority Features</h4>
-              {report.technicalCapabilities.items.map((tech, idx) => (
+              {report.technicalCapabilities?.items?.map((tech, idx) => (
                 <div key={idx} className="p-4 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors bg-slate-50">
                   <div className="flex justify-between items-start mb-2">
                     <span className="font-bold text-slate-800 text-sm">{tech.feature}</span>
@@ -180,7 +183,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
               ))}
            </div>
            <div className="lg:col-span-2">
-              <AnalysisBlock data={report.technicalCapabilities.detailedAnalysis} />
+              <AnalysisBlock data={report.technicalCapabilities?.detailedAnalysis} />
            </div>
         </div>
       </Card>
@@ -189,7 +192,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
       <Card className="lg:col-span-12">
         <SectionHeader icon={Network} title="6. Network Planning & Optimization" />
         <div className="space-y-6">
-          {report.networkPlanning.map((item, idx) => (
+          {report.networkPlanning?.map((item, idx) => (
             <AnalysisBlock key={idx} data={item} />
           ))}
         </div>
@@ -199,7 +202,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
       <Card className="lg:col-span-12">
         <SectionHeader icon={ShoppingBag} title="7. Commercial Strategy & Go-to-Market" />
         <div className="space-y-6">
-           {report.commercialStrategy.map((item, idx) => (
+           {report.commercialStrategy?.map((item, idx) => (
             <AnalysisBlock key={idx} data={item} />
           ))}
         </div>
@@ -212,9 +215,9 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
            <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <h4 className="font-bold text-slate-800 mb-2">Executive Summary</h4>
-                <p className="text-slate-600 text-sm leading-relaxed">{report.roiAnalysis.summary}</p>
+                <p className="text-slate-600 text-sm leading-relaxed">{report.roiAnalysis?.summary}</p>
                 <div className="mt-4 flex gap-2 flex-wrap">
-                  {report.roiAnalysis.assumptions.slice(0, 4).map((a, i) => (
+                  {report.roiAnalysis?.assumptions?.slice(0, 4).map((a, i) => (
                     <span key={i} className="text-xs px-2 py-1 bg-slate-100 text-slate-500 rounded border border-slate-200">
                       {a}
                     </span>
@@ -233,14 +236,14 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
               </div>
            </div>
         </div>
-        <AnalysisBlock data={report.roiAnalysis.detailedAnalysis} />
+        <AnalysisBlock data={report.roiAnalysis?.detailedAnalysis} />
       </Card>
 
       {/* 9. Operations */}
       <Card className="lg:col-span-12">
         <SectionHeader icon={Settings} title="9. Operations, O&M & Automation" />
          <div className="space-y-6">
-          {report.operations.map((item, idx) => (
+          {report.operations?.map((item, idx) => (
             <AnalysisBlock key={idx} data={item} />
           ))}
         </div>
