@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatMessage, FWAReport, Language } from '../types';
 import { chatWithInsight } from '../services/geminiService';
-import { Send, Bot, X, Sparkles } from 'lucide-react';
+import { Send, X, Bot, Sparkles, User } from 'lucide-react';
 
 interface ChatInterfaceProps {
   report: FWAReport;
@@ -14,8 +14,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ report, language, onClose
     {
       role: 'model',
       text: language === Language.ENGLISH 
-        ? `I have analyzed ${report.operatorName} in ${report.country}. How can I assist you with the technical or commercial details?`
-        : `我已完成对 ${report.country} ${report.operatorName} 的分析。请问您需要了解哪些技术或商业策略细节？`,
+        ? `Consultant active. I have full context on ${report.operatorName}'s ${report.country} operations. Ask me about specific technical roadmaps or commercial ROI targets.`
+        : `专家顾问已就绪。我已掌握 ${report.operatorName} 在 ${report.country} 的分析数据。您可以询问有关技术演进路径或商业投资回报的具体细节。`,
       timestamp: new Date()
     }
   ]);
@@ -57,82 +57,86 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ report, language, onClose
   };
 
   return (
-    <div className="flex flex-col h-full bg-clay border-l border-white/20 shadow-[-20px_0_40px_rgba(163,177,198,0.3)]">
-      {/* Header */}
-      <div className="p-8 pb-6 flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-clay rounded-2xl neumorphic-extruded text-accent">
-            <Bot className="w-6 h-6" />
+    <div className="flex flex-col h-full bg-white shadow-2xl">
+      {/* Chat Header */}
+      <div className="p-6 border-b border-border flex justify-between items-center bg-white">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-accent/5 rounded-xl flex items-center justify-center text-accent">
+            <Bot className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-extrabold text-clay-dark font-display leading-none mb-1">Telco AI Consultant</h3>
-            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-emerald-600">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Real-time Analysis
+            <h3 className="font-bold text-foreground text-sm leading-tight">Telco AI Strategy</h3>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">Expert Context Active</span>
             </div>
           </div>
         </div>
         {onClose && (
-          <button onClick={onClose} className="p-3 bg-clay rounded-xl neumorphic-extruded hover:text-rose-500 transition-all neumorphic-button-active">
+          <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg transition-colors text-muted-foreground">
             <X className="w-5 h-5" />
           </button>
         )}
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
+      {/* Messages area */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-background/30 custom-scrollbar">
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`
-              max-w-[90%] p-5 rounded-3xl text-sm leading-relaxed font-medium
-              ${msg.role === 'user' 
-                ? 'bg-clay neumorphic-inset text-clay-dark border-t border-white/40' 
-                : 'bg-clay neumorphic-extruded text-clay-dark'}
-            `}>
-              {msg.text}
+            <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+               <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${msg.role === 'user' ? 'bg-foreground text-white' : 'bg-accent text-white'}`}>
+                  {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+               </div>
+               <div className={`
+                 p-4 rounded-2xl text-sm leading-relaxed
+                 ${msg.role === 'user' 
+                   ? 'bg-foreground text-white' 
+                   : 'bg-white border border-border text-foreground shadow-sm'}
+               `}>
+                 {msg.text}
+               </div>
             </div>
           </div>
         ))}
         {isSending && (
-          <div className="flex justify-start">
-             <div className="bg-clay p-4 rounded-2xl neumorphic-extruded">
-                <div className="flex gap-2">
-                  <span className="w-2 h-2 bg-accent rounded-full animate-bounce"></span>
-                  <span className="w-2 h-2 bg-accent rounded-full animate-bounce delay-100"></span>
-                  <span className="w-2 h-2 bg-accent rounded-full animate-bounce delay-200"></span>
-                </div>
+          <div className="flex justify-start gap-3">
+             <div className="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center">
+                <Bot className="w-4 h-4" />
+             </div>
+             <div className="bg-white border border-border p-4 rounded-2xl flex gap-1.5">
+                <span className="w-1.5 h-1.5 bg-accent/40 rounded-full animate-bounce" />
+                <span className="w-1.5 h-1.5 bg-accent/40 rounded-full animate-bounce [animation-delay:0.2s]" />
+                <span className="w-1.5 h-1.5 bg-accent/40 rounded-full animate-bounce [animation-delay:0.4s]" />
              </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="p-8 pt-0">
-        <div className="p-2 rounded-[24px] bg-clay neumorphic-inset-deep">
-          <div className="relative flex items-center">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask for strategic advice..."
-              className="w-full pl-6 pr-14 py-4 rounded-2xl bg-transparent text-clay-dark font-medium placeholder-clay-muted focus:outline-none"
-              disabled={isSending}
-            />
-            <button 
-              onClick={handleSend}
-              disabled={!input.trim() || isSending}
-              className="absolute right-2 p-3 bg-accent text-white rounded-xl hover:bg-accent-light disabled:opacity-50 transition-all shadow-lg shadow-accent/20 neumorphic-button-active"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </div>
+      {/* Input area */}
+      <div className="p-6 border-t border-border bg-white">
+        <div className="relative group">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            placeholder="Query strategic specifics..."
+            className="w-full pl-5 pr-14 py-4 rounded-xl bg-muted/50 border border-border focus:bg-white focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none transition-all font-medium text-sm"
+            disabled={isSending}
+          />
+          <button 
+            onClick={handleSend}
+            disabled={!input.trim() || isSending}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-accent text-white rounded-lg hover:shadow-lg hover:shadow-accent/30 disabled:opacity-50 transition-all active:scale-90"
+          >
+            <Send className="w-4 h-4" />
+          </button>
         </div>
-        <p className="text-[10px] text-clay-muted text-center mt-4 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
-          <Sparkles className="w-3 h-3 text-accent" />
-          Powered by Gemini 3 Pro
-        </p>
+        <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground/60">
+           <Sparkles className="w-3 h-3 text-accent" />
+           Gemini 3 Pro Intelligence
+        </div>
       </div>
     </div>
   );

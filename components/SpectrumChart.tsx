@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { SpectrumBand } from '../types';
 
 interface SpectrumChartProps {
@@ -8,52 +8,57 @@ interface SpectrumChartProps {
 
 const SpectrumChart: React.FC<SpectrumChartProps> = ({ data }) => {
   return (
-    <div className="h-96 w-full">
+    <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-          barGap={12}
+          margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(163, 177, 198, 0.3)" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" opacity={0.5} />
           <XAxis 
             dataKey="band" 
-            stroke="#3D4852" 
-            fontSize={12} 
-            fontWeight={700}
+            axisLine={false} 
             tickLine={false} 
-            axisLine={false}
+            tick={{ fill: '#64748B', fontSize: 10, fontWeight: 700, fontFamily: 'JetBrains Mono' }}
             dy={10}
           />
           <YAxis 
-            stroke="#6B7280" 
-            fontSize={11} 
-            fontWeight={600}
+            axisLine={false} 
             tickLine={false} 
-            axisLine={false}
-            domain={[0, 100]} 
+            tick={{ fill: '#64748B', fontSize: 10, fontFamily: 'JetBrains Mono' }} 
+            domain={[0, 100]}
           />
           <Tooltip 
+            cursor={{ fill: '#F1F5F9', radius: 8 }}
             contentStyle={{ 
-              backgroundColor: '#E0E5EC', 
-              borderRadius: '16px', 
-              border: 'none', 
-              boxShadow: '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5)',
-              padding: '12px'
+              borderRadius: '12px', 
+              border: '1px solid #E2E8F0', 
+              boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+              fontFamily: 'Inter',
+              fontSize: '12px',
+              fontWeight: 600
             }}
-            cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
           />
-          <Legend 
-            wrapperStyle={{ paddingTop: '30px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}
-            iconType="circle"
-          />
-          <Bar name="Coverage Score" dataKey="coverage" fill="#6C63FF" radius={[6, 6, 0, 0]} />
-          <Bar name="Capacity Score" dataKey="capacity" fill="#38B2AC" radius={[6, 6, 0, 0]} />
+          <Bar 
+            dataKey="coverage" 
+            name="Coverage" 
+            radius={[4, 4, 0, 0]} 
+            barSize={24}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill="#0052FF" />
+            ))}
+          </Bar>
+          <Bar 
+            dataKey="capacity" 
+            name="Capacity" 
+            radius={[4, 4, 0, 0]} 
+            barSize={24}
+          >
+             {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill="#4D7CFF" opacity={0.4} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
