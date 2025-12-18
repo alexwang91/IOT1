@@ -4,7 +4,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, LayoutDashboard } from 'lucide-react';
+import { MessageSquare, LayoutDashboard, Search, Zap } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -21,94 +21,108 @@ const App: React.FC = () => {
       const data = await generateFWAReport(country, operator, lang);
       setReport(data);
     } catch (err: any) {
-      // Display the actual error message
-      setError(err.message || "Failed to generate report. Please try again later or check your network.");
+      setError(err.message || "Analysis failed. Please check your connectivity.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-clay flex flex-col font-sans">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg">
-              <LayoutDashboard className="text-white w-5 h-5" />
+      <header className="px-6 py-4 sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto flex items-center justify-between p-4 bg-clay/80 backdrop-blur-md rounded-2xl neumorphic-extruded border border-white/20">
+          <div className="flex items-center gap-3">
+            <div className="bg-accent p-2.5 rounded-xl shadow-lg shadow-accent/30">
+              <Zap className="text-white w-5 h-5" />
             </div>
-            <span className="font-bold text-xl text-slate-800">TelcoInsight AI</span>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-xl text-clay-dark font-display tracking-tight leading-none">TelcoInsight</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-clay-muted mt-1">Intelligence Core</span>
+            </div>
           </div>
           
-          {report && (
-            <button
-              onClick={() => setIsChatOpen(!isChatOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full hover:bg-slate-700 transition-colors shadow-lg shadow-blue-900/20"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span className="hidden md:inline">Ask AI Consultant</span>
-            </button>
-          )}
+          <div className="flex gap-4">
+            {report && (
+              <button
+                onClick={() => setIsChatOpen(!isChatOpen)}
+                className="flex items-center gap-2 px-6 py-2.5 bg-clay text-clay-dark font-bold rounded-xl neumorphic-extruded neumorphic-button-active hover:text-accent transition-all"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span className="hidden md:inline">Ask Consultant</span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden">
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="max-w-7xl mx-auto px-6 py-8">
             {!report && !loading && (
               <InputSection onGenerate={handleGenerate} isLoading={loading} />
             )}
 
             {loading && (
-              <div className="flex flex-col items-center justify-center mt-20 text-center">
-                 <div className="relative w-24 h-24">
-                   <div className="absolute inset-0 rounded-full border-4 border-slate-200"></div>
-                   <div className="absolute inset-0 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"></div>
+              <div className="flex flex-col items-center justify-center mt-32 text-center animate-pulse">
+                 <div className="p-10 rounded-full neumorphic-inset-deep mb-8">
+                   <div className="w-16 h-16 rounded-full border-4 border-clay border-t-accent animate-spin shadow-lg"></div>
                  </div>
-                 <h3 className="mt-8 text-xl font-bold text-slate-800">Analyzing Market Data...</h3>
-                 <p className="text-slate-500 mt-2 max-w-md">
-                   Our AI is currently performing a deep search on spectrum allocations, identifying competitive pain points, and modeling ROI scenarios for your requested operator.
+                 <h3 className="text-3xl font-extrabold text-clay-dark font-display">Forging Analysis...</h3>
+                 <p className="text-clay-muted mt-4 max-w-md font-medium text-lg leading-relaxed">
+                   Aggregating global market data, identifying operator pain points, and calculating ROI scenarios.
                  </p>
-                 <div className="mt-6 space-y-2 text-sm text-slate-400">
-                   <p>✓ Accessing Global Spectrum Database</p>
-                   <p>✓ Analyzing 5G/4G Coverage Maps</p>
-                   <p>✓ Calculating Commercial Viability</p>
+                 <div className="mt-12 flex gap-8">
+                    {['Spectrum', 'Market', 'Technical'].map((label, i) => (
+                      <div key={i} className="flex items-center gap-2 px-4 py-2 bg-clay rounded-xl neumorphic-inset text-[10px] font-black uppercase tracking-widest text-clay-muted">
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+                        {label}
+                      </div>
+                    ))}
                  </div>
               </div>
             )}
 
             {error && (
-              <div className="max-w-xl mx-auto mt-12 p-6 bg-red-50 text-red-700 border border-red-200 rounded-xl text-center shadow-sm">
-                <div className="flex justify-center mb-4">
-                    <span className="bg-red-100 p-3 rounded-full">⚠️</span>
+              <div className="max-w-2xl mx-auto mt-20 p-12 bg-clay rounded-[32px] neumorphic-extruded border border-rose-500/20 text-center">
+                <div className="inline-flex p-5 rounded-full bg-rose-500/10 text-rose-500 mb-6 neumorphic-inset">
+                  <LayoutDashboard className="w-10 h-10" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">Analysis Failed</h3>
-                <p className="mb-6">{error}</p>
+                <h3 className="text-2xl font-extrabold text-clay-dark mb-4 font-display">Analysis Interrupted</h3>
+                <p className="text-clay-muted font-medium mb-10 leading-relaxed text-lg">{error}</p>
                 <button 
                   onClick={() => setError(null)}
-                  className="px-6 py-2 bg-white border border-red-200 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition-colors"
+                  className="px-10 py-4 bg-accent text-white font-bold rounded-2xl hover:bg-accent-light transition-all shadow-lg shadow-accent/20 neumorphic-button-active"
                 >
-                  Try Again
+                  Return to Dashboard
                 </button>
               </div>
             )}
 
             {report && (
                <div className="animate-fade-in-up">
-                 <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                 <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
                    <div>
-                     <h1 className="text-3xl font-bold text-slate-900">{report.operatorName}</h1>
-                     <p className="text-slate-500 text-lg">{report.country} - Fixed Wireless Access Strategy Report</p>
+                     <div className="flex items-center gap-2 mb-2">
+                       <span className="px-3 py-1 bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest rounded-full neumorphic-inset">
+                         Strategic Report
+                       </span>
+                     </div>
+                     <h1 className="text-5xl font-extrabold text-clay-dark tracking-tighter font-display mb-2">
+                       {report.operatorName}
+                     </h1>
+                     <p className="text-clay-muted text-xl font-medium italic">
+                       {report.country} • FWA Positioning & Growth Potential
+                     </p>
                    </div>
-                   <div className="flex gap-2">
-                     <button 
-                       onClick={() => setReport(null)}
-                       className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-all"
-                     >
-                       New Analysis
-                     </button>
-                   </div>
+                   <button 
+                     onClick={() => setReport(null)}
+                     className="px-8 py-3 bg-clay text-clay-muted font-bold rounded-xl neumorphic-extruded border border-white/20 hover:text-clay-dark transition-all neumorphic-button-active flex items-center gap-2"
+                   >
+                     <Search className="w-4 h-4" />
+                     New Analysis
+                   </button>
                  </div>
                  
                  <ReportView report={report} />
@@ -121,7 +135,7 @@ const App: React.FC = () => {
         {report && (
           <div 
             className={`
-              fixed inset-y-0 right-0 z-40 w-full md:w-[450px] transform transition-transform duration-300 ease-in-out
+              fixed inset-y-0 right-0 z-40 w-full md:w-[500px] transform transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
               ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}
             `}
           >
@@ -136,7 +150,7 @@ const App: React.FC = () => {
         {/* Overlay for mobile chat */}
         {isChatOpen && (
           <div 
-            className="fixed inset-0 bg-black/20 z-30 md:hidden" 
+            className="fixed inset-0 bg-clay-dark/30 backdrop-blur-sm z-30 transition-opacity duration-500" 
             onClick={() => setIsChatOpen(false)}
           />
         )}

@@ -4,26 +4,70 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TelcoInsight AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['DM Sans', 'sans-serif'],
+              display: ['Plus Jakarta Sans', 'sans-serif'],
+            },
+            colors: {
+              clay: '#E0E5EC',
+              'clay-dark': '#3D4852',
+              'clay-muted': '#6B7280',
+              accent: '#6C63FF',
+              'accent-light': '#8B84FF',
+            }
+          }
+        }
+      }
+    </script>
     <script>
       // Polyfill process.env to avoid "process is not defined" ReferenceError in client-side builds (Vercel/Vite)
       window.process = window.process || { env: { NODE_ENV: 'production' } };
     </script>
     <style>
+      body {
+        background-color: #E0E5EC;
+      }
       /* Custom Scrollbar for a cleaner dashboard look */
       ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
       }
       ::-webkit-scrollbar-track {
-        background: #f1f5f9; 
+        background: #E0E5EC; 
       }
       ::-webkit-scrollbar-thumb {
         background: #cbd5e1; 
-        border-radius: 4px;
+        border-radius: 20px;
+        border: 3px solid #E0E5EC;
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #94a3b8; 
+      }
+
+      .neumorphic-extruded {
+        box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5);
+      }
+      .neumorphic-extruded-hover:hover {
+        box-shadow: 12px 12px 20px rgb(163,177,198,0.7), -12px -12px 20px rgba(255,255,255,0.6);
+        transform: translateY(-1px);
+      }
+      .neumorphic-inset {
+        box-shadow: inset 6px 6px 10px rgb(163,177,198,0.6), inset -6px -6px 10px rgba(255,255,255,0.5);
+      }
+      .neumorphic-inset-deep {
+        box-shadow: inset 10px 10px 20px rgb(163,177,198,0.7), inset -10px -10px 20px rgba(255,255,255,0.6);
+      }
+      .neumorphic-button-active:active {
+        box-shadow: inset 4px 4px 8px rgb(163,177,198,0.6), inset -4px -4px 8px rgba(255,255,255,0.5);
+        transform: translateY(0.5px);
       }
     </style>
   <script type="importmap">
@@ -39,7 +83,7 @@
 }
 </script>
 </head>
-  <body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
+  <body class="text-clay-dark antialiased selection:bg-accent/20 selection:text-accent">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

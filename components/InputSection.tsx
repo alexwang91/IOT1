@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Language } from '../types';
-import { Search, Globe, Building2, Loader2 } from 'lucide-react';
+import { Globe, Building2, Loader2, Search } from 'lucide-react';
 
 interface InputSectionProps {
   onGenerate: (country: string, operator: string, lang: Language) => void;
@@ -20,74 +20,83 @@ const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isLoading }) =>
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-xl border border-slate-100 my-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">FWA Strategy Insight AI</h1>
-        <p className="text-slate-500">
-          Enter a Country and Operator to generate a comprehensive 5G/4G Fixed Wireless Access strategic report.
+    <div className="w-full max-w-5xl mx-auto p-12 bg-clay rounded-[40px] neumorphic-extruded border border-white/10 my-12 transition-all duration-500">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-clay-dark mb-4 tracking-tight font-display">
+          FWA Strategy <span className="text-accent">Insight AI</span>
+        </h1>
+        <p className="text-clay-muted text-lg max-w-2xl mx-auto">
+          Molding global spectrum data and market intelligence into actionable strategic reports.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 items-end">
-        <div className="flex-1 w-full">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Target Country</label>
-          <div className="relative">
-            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+        <div className="md:col-span-4">
+          <label className="block text-xs font-bold uppercase tracking-widest text-clay-muted mb-3 ml-1">Target Country</label>
+          <div className="relative group">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-clay-muted group-focus-within:text-accent transition-colors">
+              <Globe className="w-5 h-5" />
+            </div>
             <input
               type="text"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              placeholder="e.g., Thailand, Brazil"
-              className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              placeholder="e.g., Thailand"
+              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-clay neumorphic-inset-deep text-clay-dark placeholder-clay-muted focus:ring-2 focus:ring-accent/50 outline-none transition-all font-medium"
               required
             />
           </div>
         </div>
 
-        <div className="flex-1 w-full">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Telecom Operator</label>
-          <div className="relative">
-            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+        <div className="md:col-span-4">
+          <label className="block text-xs font-bold uppercase tracking-widest text-clay-muted mb-3 ml-1">Telecom Operator</label>
+          <div className="relative group">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-clay-muted group-focus-within:text-accent transition-colors">
+              <Building2 className="w-5 h-5" />
+            </div>
             <input
               type="text"
               value={operator}
               onChange={(e) => setOperator(e.target.value)}
-              placeholder="e.g., AIS, Vivo"
-              className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              placeholder="e.g., AIS"
+              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-clay neumorphic-inset-deep text-clay-dark placeholder-clay-muted focus:ring-2 focus:ring-accent/50 outline-none transition-all font-medium"
               required
             />
           </div>
         </div>
 
-        <div className="w-full md:w-40">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Language</label>
+        <div className="md:col-span-2">
+          <label className="block text-xs font-bold uppercase tracking-widest text-clay-muted mb-3 ml-1">Language</label>
           <select
             value={lang}
             onChange={(e) => setLang(e.target.value as Language)}
-            className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+            className="w-full px-4 py-4 rounded-2xl bg-clay neumorphic-inset text-clay-dark font-semibold outline-none appearance-none cursor-pointer hover:bg-clay/50 transition-colors"
           >
             <option value={Language.ENGLISH}>English</option>
             <option value={Language.CHINESE}>中文</option>
           </select>
         </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          {isLoading ? (
-            <>
+        <div className="md:col-span-2">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`w-full h-[60px] rounded-2xl flex items-center justify-center gap-2 font-bold transition-all duration-300 neumorphic-extruded neumorphic-button-active ${
+              isLoading 
+                ? 'bg-clay text-clay-muted opacity-80' 
+                : 'bg-accent text-white hover:bg-accent-light'
+            }`}
+          >
+            {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
-              Thinking...
-            </>
-          ) : (
-            <>
-              <Search className="w-5 h-5" />
-              Analyze
-            </>
-          )}
-        </button>
+            ) : (
+              <>
+                <Search className="w-5 h-5" />
+                <span>Analyze</span>
+              </>
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );

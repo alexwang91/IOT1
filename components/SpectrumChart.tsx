@@ -8,7 +8,7 @@ interface SpectrumChartProps {
 
 const SpectrumChart: React.FC<SpectrumChartProps> = ({ data }) => {
   return (
-    <div className="h-80 w-full mt-4">
+    <div className="h-96 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
@@ -18,17 +18,42 @@ const SpectrumChart: React.FC<SpectrumChartProps> = ({ data }) => {
             left: 20,
             bottom: 5,
           }}
+          barGap={12}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis dataKey="band" stroke="#64748b" fontSize={12} tickLine={false} />
-          <YAxis stroke="#64748b" fontSize={12} tickLine={false} domain={[0, 100]} />
-          <Tooltip 
-            contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-            cursor={{fill: '#f1f5f9'}}
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(163, 177, 198, 0.3)" vertical={false} />
+          <XAxis 
+            dataKey="band" 
+            stroke="#3D4852" 
+            fontSize={12} 
+            fontWeight={700}
+            tickLine={false} 
+            axisLine={false}
+            dy={10}
           />
-          <Legend wrapperStyle={{ paddingTop: '20px' }} />
-          <Bar name="Coverage Score" dataKey="coverage" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-          <Bar name="Capacity Score" dataKey="capacity" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+          <YAxis 
+            stroke="#6B7280" 
+            fontSize={11} 
+            fontWeight={600}
+            tickLine={false} 
+            axisLine={false}
+            domain={[0, 100]} 
+          />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#E0E5EC', 
+              borderRadius: '16px', 
+              border: 'none', 
+              boxShadow: '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5)',
+              padding: '12px'
+            }}
+            cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
+          />
+          <Legend 
+            wrapperStyle={{ paddingTop: '30px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+            iconType="circle"
+          />
+          <Bar name="Coverage Score" dataKey="coverage" fill="#6C63FF" radius={[6, 6, 0, 0]} />
+          <Bar name="Capacity Score" dataKey="capacity" fill="#38B2AC" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
