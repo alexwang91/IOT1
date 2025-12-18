@@ -60,18 +60,24 @@ const AnalysisList = ({ items, type }: { items: string[], type: 'strength' | 'ch
       icon: CheckCircle2, 
       color: 'text-emerald-600',
       label: 'Strength',
+      bg: 'bg-emerald-50/30',
+      border: 'border-emerald-100',
       dot: 'bg-emerald-600'
     },
     challenge: { 
       icon: AlertCircle, 
       color: 'text-rose-600',
       label: 'Challenge',
+      bg: 'bg-rose-50/30',
+      border: 'border-rose-100',
       dot: 'bg-rose-600'
     },
     recommendation: { 
       icon: Lightbulb, 
       color: 'text-accent',
       label: 'Advice',
+      bg: 'bg-accent/5',
+      border: 'border-accent/10',
       dot: 'bg-accent'
     },
   }[type];
@@ -83,17 +89,22 @@ const AnalysisList = ({ items, type }: { items: string[], type: 'strength' | 'ch
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <Icon className={`w-3.5 h-3.5 ${themes.color}`} />
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">{themes.label}</span>
+        <Icon className={`w-4 h-4 ${themes.color}`} />
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{themes.label}</span>
       </div>
-      <ul className="space-y-3">
+      <div className="space-y-3">
         {items.map((item, i) => (
-          <li key={i} className="flex items-start gap-3 group">
-            <div className={`mt-2 w-1.5 h-1.5 rounded-full shrink-0 ${themes.dot} opacity-20 group-hover:opacity-100 transition-opacity`} />
-            <span className="text-sm text-foreground/80 leading-relaxed font-medium">{item}</span>
-          </li>
+          <div 
+            key={i} 
+            className={`p-5 rounded-2xl border ${themes.border} ${themes.bg} shadow-sm group hover:shadow-md transition-all duration-300`}
+          >
+            <div className="flex items-start gap-3">
+              <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${themes.dot} opacity-40 group-hover:opacity-100 transition-opacity`} />
+              <p className="text-sm text-foreground/80 leading-relaxed font-medium">{item}</p>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
@@ -109,7 +120,7 @@ const AnalysisBlock: React.FC<{ data: StrategicAnalysis }> = ({ data }) => {
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <AnalysisList items={data.strengths} type="strength" />
         <AnalysisList items={data.challenges} type="challenge" />
         <AnalysisList items={data.recommendations} type="recommendation" />
