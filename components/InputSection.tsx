@@ -82,14 +82,10 @@ const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isLoading }) =>
           disabled={isLoading || !country || !operator}
           className="w-full h-16 bg-accent-gradient text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-accent/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none"
         >
-          <span className="text-lg">Generate Strategy Report</span>
+          <span className="text-lg">Run Analysis</span>
           <ArrowRight className="w-5 h-5" />
         </button>
       </form>
-      
-      <p className="text-[10px] text-muted-foreground/60 text-center font-mono uppercase tracking-[0.1em]">
-        Powered by Gemini 3 Pro • Real-time Spectrum Grounding
-      </p>
     </div>
   );
 };

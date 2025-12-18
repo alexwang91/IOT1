@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FWAReport, StrategicAnalysis } from '../types';
 import SpectrumChart from './SpectrumChart';
 import { 
   AlertCircle, Target, Radio, Cpu, Network, 
   ShoppingBag, TrendingUp, Settings, CheckCircle2, Lightbulb,
-  Globe, Search, ArrowUpRight
+  Globe, Search, ArrowUpRight, Info
 } from 'lucide-react';
 
 const SectionWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => (
@@ -15,12 +15,44 @@ const SectionWrapper: React.FC<{ children: React.ReactNode; className?: string }
 
 const SectionHeader = ({ icon: Icon, title, id }: { icon: any, title: string, id?: string }) => (
   <div className="flex items-center gap-4 mb-10" id={id}>
-    <div className="w-12 h-12 bg-accent/5 rounded-2xl flex items-center justify-center text-accent">
+    <div className="w-12 h-12 bg-accent-gradient rounded-2xl flex items-center justify-center text-white shadow-lg shadow-accent/20">
       <Icon className="w-6 h-6" />
     </div>
-    <h2 className="font-display text-3xl text-foreground tracking-tight">{title}</h2>
+    <h2 className="font-display text-3xl tracking-tight gradient-text">{title}</h2>
   </div>
 );
+
+const StatWithTooltip = ({ label, value, subtext, tooltip, highlight = false }: { label: string, value: string, subtext: string, tooltip: string, highlight?: boolean }) => {
+  const [show, setShow] = useState(false);
+  
+  return (
+    <div 
+      className={`p-8 border rounded-3xl space-y-2 relative group transition-all duration-300 ${
+        highlight 
+          ? 'bg-accent-gradient border-transparent text-white shadow-xl shadow-accent/20' 
+          : 'bg-white/5 border-white/10 text-white backdrop-blur-sm hover:bg-white/10'
+      }`}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <div className="flex items-center justify-between">
+        <div className={`text-[10px] font-mono font-bold uppercase tracking-[0.2em] ${highlight ? 'text-white/70' : 'text-white/50'}`}>
+          {label}
+        </div>
+        <Info className={`w-3.5 h-3.5 transition-opacity ${show ? 'opacity-100' : 'opacity-0'} ${highlight ? 'text-white' : 'text-accent'}`} />
+      </div>
+      <div className="text-4xl font-display">{value}</div>
+      <p className={`text-xs ${highlight ? 'text-white/70' : 'text-white/40'}`}>{subtext}</p>
+      
+      {show && (
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-64 p-4 bg-foreground text-white text-[11px] rounded-xl shadow-2xl border border-white/10 z-50 animate-fade-in-up font-medium leading-relaxed">
+          {tooltip}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-foreground" />
+        </div>
+      )}
+    </div>
+  );
+};
 
 const AnalysisList = ({ items, type }: { items: string[], type: 'strength' | 'challenge' | 'recommendation' }) => {
   const themes = {
@@ -139,9 +171,7 @@ const ReportView: React.FC<{ report: FWAReport }> = ({ report }) => {
                       <div className="font-bold text-foreground">{b.band}</div>
                       <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase">{b.technology}</div>
                     </div>
-                    <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                      b.status.toLowerCase().includes('allocated') ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
-                    }`}>
+                    <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white bg-accent-gradient shadow-sm`}>
                       {b.status}
                     </div>
                   </div>
@@ -166,7 +196,7 @@ const ReportView: React.FC<{ report: FWAReport }> = ({ report }) => {
                       <span className="text-[9px] font-black uppercase text-accent">{tech.priority}</span>
                     </div>
                     <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                       <div className={`h-full bg-accent ${tech.priority === 'High' ? 'w-full' : tech.priority === 'Medium' ? 'w-2/3' : 'w-1/3'}`} />
+                       <div className={`h-full bg-accent-gradient ${tech.priority === 'High' ? 'w-full' : tech.priority === 'Medium' ? 'w-2/3' : 'w-1/3'}`} />
                     </div>
                   </div>
                 ))}
@@ -178,12 +208,11 @@ const ReportView: React.FC<{ report: FWAReport }> = ({ report }) => {
 
       {/* Financial Section */}
       <section className="bg-foreground rounded-[2.5rem] p-12 text-white relative overflow-hidden">
-         {/* Decorative Background */}
          <div className="absolute top-0 right-0 w-96 h-96 bg-accent/20 blur-[120px] rounded-full -mr-48 -mt-48" />
          
          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div className="space-y-8">
-               <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-accent">
+               <div className="w-12 h-12 bg-accent-gradient rounded-2xl flex items-center justify-center text-white shadow-lg shadow-accent/20">
                  <TrendingUp className="w-6 h-6" />
                </div>
                <h2 className="font-display text-4xl">ROI & Commercial Forecast</h2>
@@ -198,16 +227,19 @@ const ReportView: React.FC<{ report: FWAReport }> = ({ report }) => {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-               <div className="p-8 bg-white/5 border border-white/10 rounded-3xl space-y-2 backdrop-blur-sm">
-                  <div className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-white/50">Market Potential</div>
-                  <div className="text-4xl font-display">HIGH</div>
-                  <p className="text-xs text-white/40">Forecasted NPV Cluster</p>
-               </div>
-               <div className="p-8 bg-accent-gradient rounded-3xl space-y-2 shadow-xl shadow-accent/20">
-                  <div className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-white/70">IRR Target</div>
-                  <div className="text-4xl font-display">20%+</div>
-                  <p className="text-xs text-white/70">Strategic Benchmarks</p>
-               </div>
+               <StatWithTooltip 
+                 label="Market Potential" 
+                 value="HIGH" 
+                 subtext="Forecasted NPV Cluster"
+                 tooltip="Represents the qualitative assessment of addressable FWA market scale based on competitor coverage gaps and spectrum availability."
+               />
+               <StatWithTooltip 
+                 label="IRR Target" 
+                 value="20%+" 
+                 subtext="Strategic Benchmarks"
+                 highlight
+                 tooltip="Internal Rate of Return expected from the FWA deployment over a 5-year horizon, assuming optimized spectrum utilization."
+               />
             </div>
          </div>
       </section>

@@ -44,9 +44,12 @@ const SpectrumChart: React.FC<SpectrumChartProps> = ({ data }) => {
             name="Coverage" 
             radius={[4, 4, 0, 0]} 
             barSize={24}
+            isAnimationActive={true}
+            animationDuration={1500}
+            animationBegin={300}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill="#0052FF" />
+              <Cell key={`cell-cov-${index}`} fill="#0052FF" />
             ))}
           </Bar>
           <Bar 
@@ -54,9 +57,12 @@ const SpectrumChart: React.FC<SpectrumChartProps> = ({ data }) => {
             name="Capacity" 
             radius={[4, 4, 0, 0]} 
             barSize={24}
+            isAnimationActive={true}
+            animationDuration={1500}
+            animationBegin={500}
           >
              {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill="#4D7CFF" opacity={0.4} />
+              <Cell key={`cell-cap-${index}`} fill="#4D7CFF" opacity={0.4} />
             ))}
           </Bar>
         </BarChart>
