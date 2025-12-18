@@ -1,5 +1,9 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
+
+// The hardcoded API Key as per user instruction
+const GLOBAL_API_KEY = "AIzaSyCyA8Z6GzGHbj1SU2Dw4P9urGMjBY0JlbE";
 
 /**
  * Robust JSON parser that handles common LLM issues like truncation, 
@@ -35,7 +39,6 @@ const cleanAndParseJSON = (text: string): FWAReport => {
     return JSON.parse(cleaned) as FWAReport;
   } catch (error: any) {
     console.error("JSON Parse Error. Data sample:", cleaned.substring(0, 100));
-    // Final attempt: aggressive newline and quote cleanup
     try {
       const sanitized = cleaned
         .replace(/\n/g, ' ')
@@ -43,7 +46,7 @@ const cleanAndParseJSON = (text: string): FWAReport => {
         .replace(/\t/g, ' ');
       return JSON.parse(sanitized) as FWAReport;
     } catch (finalError) {
-      throw new Error(`Failed to parse report data. The AI response was malformed or truncated. Error: ${error.message}`);
+      throw new Error(`Failed to parse report data. The AI response was malformed. Error: ${error.message}`);
     }
   }
 };
@@ -52,14 +55,8 @@ const cleanAndParseJSON = (text: string): FWAReport => {
  * Generates an FWA strategy report using Gemini 3 Pro.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey || apiKey === "") {
-    throw new Error("API_KEY_MISSING");
-  }
-
-  const ai = new GoogleGenAI({ apiKey });
+  const ai = new GoogleGenAI({ apiKey: GLOBAL_API_KEY });
   
-  // Refined prompt to ensure JSON validity and manage token length to avoid truncation
   const prompt = `
     Task: Generate a professional FWA (Fixed Wireless Access) strategy insight report.
     Operator: ${operator}
@@ -67,10 +64,9 @@ export const generateFWAReport = async (country: string, operator: string, langu
     Language: ${language}
 
     Guidelines:
-    1. Use Google Search to find actual spectrum holdings, recent news, and market share for ${operator}.
+    1. Use Google Search to find actual spectrum holdings (e.g., 700MHz, 2.6GHz, 3.5GHz), recent news, and market share for ${operator}.
     2. Output strictly as a valid JSON object.
-    3. Keep descriptions concise but high-value to avoid response truncation.
-    4. Ensure all strings are properly escaped.
+    3. Ensure all strings are properly escaped.
 
     JSON Structure:
     {
@@ -85,7 +81,7 @@ export const generateFWAReport = async (country: string, operator: string, langu
       },
       "spectrumAnalysis": {
         "overview": "Summary of held spectrum.",
-        "bands": [{ "band": "e.g. 3.5GHz", "technology": "5G", "coverage": 80, "capacity": 90, "status": "Allocated" }],
+        "bands": [{ "band": "3.5GHz", "technology": "5G", "coverage": 80, "capacity": 90, "status": "Allocated" }],
         "detailedAnalysis": { "title": "Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
       "technicalCapabilities": {
@@ -117,15 +113,11 @@ export const generateFWAReport = async (country: string, operator: string, langu
     if (!text) throw new Error("Empty response from Gemini API.");
 
     const report = cleanAndParseJSON(text);
-    // Include grounding metadata for citations as required
     report.groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
     
     return report;
   } catch (error: any) {
     console.error("FWA Generation Error:", error);
-    if (error.message?.includes("API key not found") || error.message?.includes("Requested entity was not found")) {
-      throw new Error("API_KEY_INVALID");
-    }
     throw error;
   }
 };
@@ -139,11 +131,8 @@ export const chatWithInsight = async (
   reportContext: FWAReport, 
   language: Language
 ): Promise<string> => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey || apiKey === "") return "Error: API key is not configured.";
-
-  const ai = new GoogleGenAI({ apiKey });
-  const systemContext = `You are an expert Telecom Strategic Consultant. Report Context for ${reportContext.operatorName} in ${reportContext.country}: ${JSON.stringify(reportContext).substring(0, 5000)}. Language: ${language}. Answer based on this data.`;
+  const ai = new GoogleGenAI({ apiKey: GLOBAL_API_KEY });
+  const systemContext = `You are an expert Telecom Strategic Consultant. Report Context for ${reportContext.operatorName} in ${reportContext.country}: ${JSON.stringify(reportContext).substring(0, 5000)}. Language: ${language}.`;
 
   const chat = ai.chats.create({
     model: 'gemini-3-pro-preview',

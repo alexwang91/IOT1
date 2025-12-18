@@ -1,23 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import InputSection from './components/InputSection';
 import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, LayoutDashboard, Search, Zap, Key, AlertCircle } from 'lucide-react';
-
-declare global {
-  interface AIStudio {
-    hasSelectedApiKey: () => Promise<boolean>;
-    openSelectKey: () => Promise<void>;
-  }
-  interface Window {
-    // Fixed: All declarations of 'aistudio' must have identical modifiers. 
-    // Making it optional to match potential existing environment definitions.
-    aistudio?: AIStudio;
-  }
-}
+import { MessageSquare, LayoutDashboard, Search, Zap } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -25,41 +13,8 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>(Language.ENGLISH);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [hasKey, setHasKey] = useState<boolean>(true);
-
-  // Validate API key state on load and periodically
-  useEffect(() => {
-    const validateKey = async () => {
-      const envKey = process.env.API_KEY;
-      if (typeof window.aistudio !== 'undefined') {
-        const platformKey = await window.aistudio.hasSelectedApiKey();
-        setHasKey(platformKey || (!!envKey && envKey !== ""));
-      } else {
-        setHasKey(!!envKey && envKey !== "");
-      }
-    };
-    validateKey();
-    const interval = setInterval(validateKey, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleOpenKeySelector = async () => {
-    if (typeof window.aistudio !== 'undefined') {
-      await window.aistudio.openSelectKey();
-      // Assume success per guidelines to avoid race condition
-      setHasKey(true);
-      setError(null);
-    }
-  };
 
   const handleGenerate = async (country: string, operator: string, lang: Language) => {
-    // Immediate check before starting
-    if (!process.env.API_KEY || process.env.API_KEY === "") {
-        setHasKey(false);
-        setError("API Key is missing. Please select one to proceed.");
-        return;
-    }
-
     setLoading(true);
     setError(null);
     setLanguage(lang);
@@ -68,12 +23,7 @@ const App: React.FC = () => {
       const data = await generateFWAReport(country, operator, lang);
       setReport(data);
     } catch (err: any) {
-      if (err.message === "API_KEY_MISSING" || err.message === "API_KEY_INVALID") {
-        setHasKey(false);
-        setError("Your API key is missing or invalid. Please select a valid key from a paid project.");
-      } else {
-        setError(err.message || "An unexpected error occurred during analysis.");
-      }
+      setError(err.message || "An unexpected error occurred during analysis.");
     } finally {
       setLoading(false);
     }
@@ -81,7 +31,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-clay flex flex-col font-sans">
-      {/* Dynamic Header */}
       <header className="px-6 py-4 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4 bg-clay/80 backdrop-blur-md rounded-2xl neumorphic-extruded border border-white/20">
           <div className="flex items-center gap-3">
@@ -95,15 +44,6 @@ const App: React.FC = () => {
           </div>
           
           <div className="flex gap-4">
-            {!hasKey && (
-              <button
-                onClick={handleOpenKeySelector}
-                className="flex items-center gap-2 px-4 py-2 bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-500/20 hover:bg-rose-600 transition-all animate-pulse"
-              >
-                <Key className="w-4 h-4" />
-                <span>Configure Key</span>
-              </button>
-            )}
             {report && (
               <button
                 onClick={() => setIsChatOpen(!isChatOpen)}
@@ -121,29 +61,7 @@ const App: React.FC = () => {
         <div className="flex-1 overflow-y-auto custom-scrollbar">
           <div className="max-w-7xl mx-auto px-6 py-8">
             
-            {/* API Key Selection State */}
-            {!hasKey && !report && !loading && (
-              <div className="max-w-xl mx-auto mt-20 p-12 bg-clay rounded-[40px] neumorphic-extruded border border-white/10 text-center animate-fade-in-up">
-                <div className="p-6 rounded-full neumorphic-inset-deep inline-flex text-rose-500 mb-8">
-                   <AlertCircle className="w-12 h-12" />
-                </div>
-                <h2 className="text-3xl font-extrabold text-clay-dark font-display mb-4">Authentication Required</h2>
-                <p className="text-clay-muted mb-10 leading-relaxed font-medium">
-                  To analyze real-time spectrum data and market trends using Gemini 3 Pro, a valid API key must be selected.
-                </p>
-                <button
-                  onClick={handleOpenKeySelector}
-                  className="w-full py-4 bg-accent text-white font-bold rounded-2xl hover:bg-accent-light transition-all shadow-lg shadow-accent/20 neumorphic-button-active"
-                >
-                  Connect API Key
-                </button>
-                <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" className="block mt-6 text-xs font-bold text-accent uppercase tracking-widest hover:underline">
-                  Billing & Documentation
-                </a>
-              </div>
-            )}
-
-            {hasKey && !report && !loading && (
+            {!report && !loading && (
               <InputSection onGenerate={handleGenerate} isLoading={loading} />
             )}
 
@@ -166,20 +84,12 @@ const App: React.FC = () => {
                 </div>
                 <h3 className="text-2xl font-extrabold text-clay-dark mb-4 font-display">Analysis Interrupted</h3>
                 <p className="text-clay-muted font-medium mb-10 leading-relaxed text-lg">{error}</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button 
-                    onClick={() => { setError(null); setReport(null); }}
-                    className="px-10 py-4 bg-accent text-white font-bold rounded-2xl hover:bg-accent-light transition-all shadow-lg shadow-accent/20 neumorphic-button-active"
-                  >
-                    Return Home
-                  </button>
-                  <button 
-                    onClick={handleOpenKeySelector}
-                    className="px-10 py-4 bg-clay text-clay-dark font-bold rounded-2xl neumorphic-extruded transition-all neumorphic-button-active"
-                  >
-                    Check API Settings
-                  </button>
-                </div>
+                <button 
+                  onClick={() => { setError(null); setReport(null); }}
+                  className="px-10 py-4 bg-accent text-white font-bold rounded-2xl hover:bg-accent-light transition-all shadow-lg shadow-accent/20 neumorphic-button-active"
+                >
+                  Return Home
+                </button>
               </div>
             )}
 
@@ -214,7 +124,6 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Chat Component */}
         {report && (
           <div 
             className={`
