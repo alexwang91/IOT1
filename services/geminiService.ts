@@ -1,72 +1,61 @@
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
-// NOTE: We initialize the AI client inside the functions to prevent 
-// "process is not defined" errors at module load time in some client-side environments.
-
 const getAIClient = () => {
-  // Attempt to retrieve the API key from various common environment variable patterns.
-  // Frontend build tools (Vite, CRA) typically require variables to start with VITE_ or REACT_APP_
-  // to be exposed to the client-side browser bundle.
-  
-  let viteKey = undefined;
-  try {
-    // @ts-ignore - Handle Vite's import.meta.env if available
-    if (typeof import.meta !== 'undefined' && import.meta.env) {
-       // @ts-ignore
-       viteKey = import.meta.env.VITE_API_KEY;
-    }
-  } catch (e) {
-    // Ignore errors if import.meta is not supported in the environment
-  }
-
-  const apiKey = 
-    process.env.API_KEY || 
-    process.env.VITE_API_KEY || 
-    process.env.REACT_APP_API_KEY || 
-    viteKey;
-
+  // Strict adherence to system instructions: use process.env.API_KEY directly.
+  const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    throw new Error(
-      "API Key is missing.\n\n" +
-      "If you are deploying on Vercel:\n" +
-      "1. Go to Settings > Environment Variables.\n" +
-      "2. Rename your variable from 'API_KEY' to 'VITE_API_KEY'.\n" +
-      "3. Redeploy the application.\n\n" +
-      "Security Note: Frontend build tools hide variables by default. They must be prefixed with 'VITE_' (for Vite) or 'REACT_APP_' (for Create React App) to be visible in the browser."
-    );
+    throw new Error("API_KEY environment variable is not defined.");
   }
   return new GoogleGenAI({ apiKey });
 };
 
-// Robust JSON parser that attempts to fix common LLM syntax errors
+// Robust JSON parser that handles common LLM formatting issues and truncation
 const cleanAndParseJSON = (text: string): FWAReport => {
-  // 1. Remove Markdown code blocks
-  let jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+  // 1. Try to find the JSON block if it's wrapped in markdown
+  let jsonStr = text;
+  const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/) || text.match(/```\s*([\s\S]*?)\s*```/);
+  
+  if (jsonMatch) {
+    jsonStr = jsonMatch[1];
+  }
 
-  // 2. Extract the main JSON object (first '{' to last '}')
+  // 2. Fallback: find the first '{' and last '}'
   const start = jsonStr.indexOf('{');
   const end = jsonStr.lastIndexOf('}');
   
   if (start !== -1 && end !== -1) {
     jsonStr = jsonStr.substring(start, end + 1);
-  } else {
-    throw new Error("No valid JSON object found in the response.");
   }
 
-  // 3. Auto-repair common syntax errors
-  // Fix: Missing commas between objects in arrays (e.g., "...}" "{...")
-  jsonStr = jsonStr.replace(/}\s*\{/g, '}, {');
-  // Fix: Missing commas between arrays and keys (e.g., "...]" "key"...)
-  jsonStr = jsonStr.replace(/]\s*"/g, '], "');
-  // Fix: Trailing commas before closing braces/brackets (e.g., "..., }")
-  jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1');
+  // 3. Common fixes for LLM-generated JSON
+  // Remove potential trailing commas before closing braces/brackets
+  jsonStr = jsonStr.replace(/,\s*([}\]])/g, '$1');
+  
+  // Try to fix cases where the model might include unescaped newlines inside strings
+  jsonStr = jsonStr.replace(/:\s*"([^"]*?)"/g, (match, p1) => {
+    const cleaned = p1.replace(/\n/g, ' ').replace(/\r/g, ' ');
+    return `: "${cleaned}"`;
+  });
 
   try {
     return JSON.parse(jsonStr) as FWAReport;
   } catch (error: any) {
-    console.error("JSON Parse failed. Raw text snippet:", jsonStr.substring(0, 200) + "...");
-    throw new Error(`Failed to parse report data: ${error.message}. The AI response was malformed.`);
+    console.debug("Standard JSON parsing failed. Attempting deep fix. Error:", error.message);
+    
+    try {
+        // Attempt to fix unescaped quotes within property values (aggressive fix)
+        // This looks for "key": "value with "quotes" inside"
+        let saferJson = jsonStr.replace(/"([^"]+)":\s*"([\s\S]+?)"(?=\s*[,}])/g, (match, key, val) => {
+            // Escape any unescaped double quotes in the value
+            const escapedVal = val.replace(/(?<!\\)"/g, '\\"');
+            return `"${key}": "${escapedVal}"`;
+        });
+        return JSON.parse(saferJson) as FWAReport;
+    } catch (e) {
+        console.error("Raw response that failed to parse:", text);
+        throw new Error(`The analysis was too detailed for the parser to handle. Please try again or simplify the operator name.`);
+    }
   }
 };
 
@@ -77,35 +66,29 @@ export const generateFWAReport = async (country: string, operator: string, langu
     Generate a highly detailed strategic Fixed Wireless Access (FWA) insight report for the operator "${operator}" in the country "${country}".
     The output language must be ${language}.
     
-    You must use Google Search to find real, up-to-date spectrum allocations, market challenges, and competitor data for this specific operator.
+    You must use Google Search to find real, up-to-date spectrum allocations (including specific frequency bands like 2.6GHz, 3.5GHz, etc.), market challenges, and competitor data for this specific operator.
     
-    CRITICAL INSTRUCTIONS FOR JSON OUTPUT:
-    1. Output strictly valid JSON only.
-    2. Return the JSON as a SINGLE LINE string (minified) to avoid parsing issues with newlines.
-    3. ESCAPE all double quotes inside string values (e.g., "insight": "The \\"best\\" strategy...").
-    4. Do NOT use markdown formatting.
+    CRITICAL INSTRUCTIONS FOR OUTPUT:
+    1. Output strictly valid JSON.
+    2. Ensure all strings are properly escaped (especially quotes inside text).
+    3. Do not include any conversational text outside of the JSON block.
+    4. Provide substantial "insight" paragraphs (at least 3-4 sentences each) for every section.
     
-    For every section, you must provide a detailed analysis that includes:
-    1. "insight": A comprehensive paragraph analyzing the current situation and context.
-    2. "strengths": Specific advantages (Pros) this operator has.
-    3. "challenges": Specific weaknesses, gaps, or threats (Cons) they face.
-    4. "recommendations": Actionable advice or "Sales Pitch" points on how to pitch solutions to them.
-
-    The report should cover these 9 areas in detail (Do NOT include Templates/Tools):
+    The report should cover these 9 areas in detail:
     1. Pain Points & Challenges.
     2. FWA Strategic Positioning.
     3. Value Propositions (Consumer, Enterprise, Operator internal benefits).
-    4. Spectrum Analysis (Low/Mid/High bands, current status in ${country}). Estimate coverage/capacity scores (0-100) for visualization.
-    5. Technical Capabilities (Prioritized list + Strategic Analysis).
-    6. Network Planning (Target areas, capacity planning, CPE selection).
-    7. Commercial Strategy (Go-to-market, Pricing, Channels).
-    8. ROI Analysis Model (Assumptions and financial viability).
-    9. Operations & O&M (TR-069/USP).
+    4. Spectrum Analysis (Identify specific Low/Mid/High bands currently held or planned). Estimate coverage/capacity scores (0-100) for visualization.
+    5. Technical Capabilities (Prioritized list of features like 5G SA, Massive MIMO, Slicing).
+    6. Network Planning (Targeted demographics, capacity planning, CPE strategies).
+    7. Commercial Strategy (GTM, pricing tiers, distribution channels).
+    8. ROI Analysis Model (Assumptions and strategic financial outlook).
+    9. Operations & O&M (Management systems, automated provisioning).
 
-    Structure:
+    Return the data in this exact structure:
     {
-      "operatorName": "string",
-      "country": "string",
+      "operatorName": "${operator}",
+      "country": "${country}",
       "painPoints": [{ "title": "string", "insight": "string", "strengths": ["string"], "challenges": ["string"], "recommendations": ["string"] }],
       "strategicPositioning": [{ "title": "string", "insight": "string", "strengths": ["string"], "challenges": ["string"], "recommendations": ["string"] }],
       "valueProposition": {
@@ -135,27 +118,24 @@ export const generateFWAReport = async (country: string, operator: string, langu
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        // responseMimeType is NOT allowed when using googleSearch tool
+        // responseMimeType: "application/json" is not used here because it is currently incompatible with googleSearch tool.
       }
     });
 
     const text = response.text;
     
     if (!text) {
-        throw new Error("No content generated. The model may have been blocked or failed to respond.");
+        throw new Error("The model failed to generate a response. This could be due to safety filters or connectivity issues.");
     }
 
     return cleanAndParseJSON(text);
 
   } catch (error: any) {
     console.error("Error generating report:", error);
-    if (error.message.includes("API Key is missing")) {
-        throw error;
-    }
     throw new Error(error.message || "An unexpected error occurred during analysis.");
   }
 };
@@ -173,15 +153,14 @@ export const chatWithInsight = async (
     You are an expert Telecom Consultant AI. You are discussing a specific FWA Strategy Report for ${reportContext.operatorName} in ${reportContext.country}.
     Language: ${language}.
     
-    Here is the context of the report you generated:
+    Context of the analysis:
     ${JSON.stringify(reportContext)}
 
-    Answer the user's questions based on this report and your general telecom knowledge. 
-    Be professional, insightful, and concise.
+    Answer professionally, focusing on technical feasibility, commercial ROI, and competitive landscape.
   `;
 
   const chat = ai.chats.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash-preview',
     config: {
       systemInstruction: systemContext,
     },
