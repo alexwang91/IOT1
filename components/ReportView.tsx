@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { FWAReport, StrategicAnalysis } from '../types';
 import SpectrumChart from './SpectrumChart';
 import { 
   AlertTriangle, Crosshair, Target, Radio, Cpu, Network, 
-  ShoppingBag, TrendingUp, Settings, CheckCircle2, Lightbulb 
+  ShoppingBag, TrendingUp, Settings, CheckCircle2, Lightbulb,
+  Globe, Search
 } from 'lucide-react';
 
 interface CardProps {
@@ -89,6 +91,47 @@ const AnalysisBlock: React.FC<{ data: StrategicAnalysis }> = ({ data }) => {
         <AnalysisList items={data.strengths} type="strength" />
         <AnalysisList items={data.challenges} type="challenge" />
         <AnalysisList items={data.recommendations} type="recommendation" />
+      </div>
+    </div>
+  );
+};
+
+// Component to render source URLs from grounding metadata.
+const GroundingSources = ({ chunks }: { chunks?: any[] }) => {
+  if (!chunks || chunks.length === 0) return null;
+  
+  const sources = chunks
+    .filter(chunk => chunk.web)
+    .map(chunk => chunk.web);
+
+  if (sources.length === 0) return null;
+
+  return (
+    <div className="mt-8 p-8 rounded-[32px] neumorphic-inset bg-clay/20 border border-white/10">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2 bg-accent/10 rounded-lg text-accent">
+          <Search className="w-4 h-4" />
+        </div>
+        <h3 className="text-sm font-black uppercase tracking-widest text-clay-muted">Data Sources & Citations</h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {sources.map((source, idx) => (
+          <a 
+            key={idx} 
+            href={source.uri} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-4 rounded-xl bg-clay neumorphic-extruded hover:text-accent transition-all group overflow-hidden"
+          >
+            <div className="shrink-0 w-8 h-8 rounded-lg bg-clay neumorphic-inset flex items-center justify-center text-clay-muted group-hover:text-accent">
+              <Globe className="w-4 h-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold text-clay-dark truncate">{source.title || source.uri}</div>
+              <div className="text-[9px] text-clay-muted truncate">{source.uri}</div>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   );
@@ -250,6 +293,9 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
           ))}
         </div>
       </Card>
+
+      {/* Listing source URLs as required by Google Search grounding guidelines */}
+      {report.groundingChunks && <GroundingSources chunks={report.groundingChunks} />}
 
     </div>
   );

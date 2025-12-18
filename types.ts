@@ -76,6 +76,9 @@ export interface FWAReport {
 
   // 9. Operations
   operations: StrategicAnalysis[];
+  
+  // Grounding metadata for source attribution from Google Search
+  groundingChunks?: any[];
 }
 
 export interface ChatMessage {

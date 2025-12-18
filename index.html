@@ -28,14 +28,20 @@
       }
     </script>
     <script>
-      // Polyfill process.env to avoid "process is not defined" ReferenceError in client-side builds (Vercel/Vite)
-      window.process = window.process || { env: { NODE_ENV: 'production' } };
+      /**
+       * Non-destructive polyfill for process.env.
+       * Ensures NODE_ENV is set without wiping out existing injected keys.
+       */
+      window.process = window.process || {};
+      window.process.env = window.process.env || {};
+      if (!window.process.env.NODE_ENV) {
+        window.process.env.NODE_ENV = 'production';
+      }
     </script>
     <style>
       body {
         background-color: #E0E5EC;
       }
-      /* Custom Scrollbar for a cleaner dashboard look */
       ::-webkit-scrollbar {
         width: 10px;
         height: 10px;
@@ -55,10 +61,6 @@
       .neumorphic-extruded {
         box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5);
       }
-      .neumorphic-extruded-hover:hover {
-        box-shadow: 12px 12px 20px rgb(163,177,198,0.7), -12px -12px 20px rgba(255,255,255,0.6);
-        transform: translateY(-1px);
-      }
       .neumorphic-inset {
         box-shadow: inset 6px 6px 10px rgb(163,177,198,0.6), inset -6px -6px 10px rgba(255,255,255,0.5);
       }
@@ -68,6 +70,14 @@
       .neumorphic-button-active:active {
         box-shadow: inset 4px 4px 8px rgb(163,177,198,0.6), inset -4px -4px 8px rgba(255,255,255,0.5);
         transform: translateY(0.5px);
+      }
+
+      @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+        animation: fade-in-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
       }
     </style>
   <script type="importmap">
