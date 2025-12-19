@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import InputSection from './components/InputSection';
 import ReportView from './components/ReportView';
@@ -33,9 +34,9 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-background flex flex-col font-sans selection:bg-accent/10 selection:text-accent">
       <main className="flex-1 overflow-x-hidden flex flex-col items-center">
         {!report && !loading && !error ? (
-          <div className="max-w-7xl w-full px-6 py-12 lg:py-24 grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-12 lg:gap-20 items-center">
+          <div className="max-w-7xl w-full px-6 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-12 lg:gap-16 items-center">
             {/* Left Column: Branding */}
-            <div className="space-y-10 animate-fade-in-up">
+            <div className="space-y-8 animate-fade-in-up">
               <div className="space-y-6">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-accent-gradient rounded-lg flex items-center justify-center shadow-lg shadow-accent/20">
@@ -45,44 +46,44 @@ const App: React.FC = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <h1 className="font-display text-5xl lg:text-6xl text-foreground leading-[1.1] tracking-tight">
-                    Strategic <span className="gradient-text">Insights</span> <br/> for Operators.
+                  <h1 className="font-display text-4xl lg:text-5xl text-foreground leading-[1.15] tracking-tight max-w-lg">
+                    Strategic <span className="gradient-text">Insights</span> <br/> for Network Operators.
                   </h1>
-                  <p className="text-lg text-muted-foreground leading-relaxed max-w-lg font-medium">
+                  <p className="text-base lg:text-lg text-muted-foreground leading-relaxed max-w-md font-medium">
                     Analyze global FWA strategy with enterprise-grade spectrum modeling and real-time market grounding.
                   </p>
                 </div>
               </div>
 
               {/* Author Card */}
-              <div className="inline-flex items-center gap-4 p-4 rounded-3xl bg-white/40 backdrop-blur-xl border border-white shadow-xl shadow-accent/5 group hover:shadow-accent/10 transition-all duration-500">
-                <div className="w-10 h-10 rounded-xl bg-accent-gradient p-[1px]">
-                  <div className="w-full h-full rounded-[calc(0.75rem-1px)] bg-white flex items-center justify-center">
-                    <User className="w-4 h-4 text-accent" />
+              <div className="inline-flex items-center gap-3 p-3.5 rounded-2xl bg-white/40 backdrop-blur-xl border border-white shadow-xl shadow-accent/5 group hover:shadow-accent/10 transition-all duration-500">
+                <div className="w-8 h-8 rounded-lg bg-accent-gradient p-[1px]">
+                  <div className="w-full h-full rounded-[calc(0.5rem-1px)] bg-white flex items-center justify-center">
+                    <User className="w-3.5 h-3.5 text-accent" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-foreground text-xs leading-none mb-1">Yeqi Wang</h3>
-                  <p className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest">A16z Alumni • Platform Architect</p>
+                  <h3 className="font-bold text-foreground text-[11px] leading-none mb-0.5">Yeqi Wang</h3>
+                  <p className="text-[8px] font-mono font-bold text-muted-foreground uppercase tracking-widest">A16z Alumni • Platform Architect</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-10 pt-2">
+              <div className="flex items-center gap-8 pt-4">
                 <div className="space-y-1">
-                  <div className="text-2xl font-display text-foreground">5G/FWA</div>
-                  <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest font-bold">Strategic Focus</div>
+                  <div className="text-xl font-display text-foreground">5G / FWA</div>
+                  <div className="text-[8px] font-mono text-muted-foreground uppercase tracking-widest font-black">Strategic Focus</div>
                 </div>
-                <div className="w-px h-10 bg-border" />
+                <div className="w-px h-8 bg-border" />
                 <div className="space-y-1">
-                  <div className="text-2xl font-display text-foreground">REAL-TIME</div>
-                  <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest font-bold">Search Grounding</div>
+                  <div className="text-xl font-display text-foreground">REAL-TIME</div>
+                  <div className="text-[8px] font-mono text-muted-foreground uppercase tracking-widest font-black">Search Grounding</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Input Section - Now direct access */}
+            {/* Right Column: Input Section */}
             <div className="animate-fade-in-up delay-100 lg:sticky lg:top-24">
-               <div className="bg-white p-8 lg:p-12 rounded-[2.5rem] border border-border shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)]">
+               <div className="bg-white p-6 lg:p-10 rounded-[2.5rem] border border-border shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)]">
                  <InputSection onGenerate={handleGenerate} isLoading={loading} />
                </div>
             </div>
@@ -96,7 +97,7 @@ const App: React.FC = () => {
                    <Zap className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-accent animate-pulse" />
                  </div>
                  <div className="space-y-3">
-                   <h3 className="font-display text-4xl text-foreground">Synthesizing Market Intelligence</h3>
+                   <h3 className="font-display text-3xl lg:text-4xl text-foreground">Synthesizing Market Intelligence</h3>
                    <p className="text-muted-foreground text-lg font-medium italic">Analyzing spectrum assets and financial roadmaps...</p>
                  </div>
               </div>
@@ -113,7 +114,7 @@ const App: React.FC = () => {
                 </div>
                 <button 
                   onClick={() => { setError(null); setLoading(false); }}
-                  className="w-full py-5 bg-foreground text-white font-bold rounded-xl hover:bg-slate-800 transition-all"
+                  className="w-full py-5 bg-foreground text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-[0.98]"
                 >
                   Return to Dashboard
                 </button>

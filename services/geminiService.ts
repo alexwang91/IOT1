@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
@@ -47,10 +48,9 @@ const cleanAndParseJSON = (text: string): FWAReport => {
  * Generates an FWA strategy report using Gemini 3 Pro.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
-  // Always use a fresh instance to capture any updated environment state
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    throw new Error("API Key is missing. Please select a valid key via the 'Select API Key' button.");
+    throw new Error("Configuration Error: API_KEY environment variable is not set. Please check your deployment environment variables.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -61,11 +61,11 @@ export const generateFWAReport = async (country: string, operator: string, langu
     Country: ${country}
     Language: ${language}
 
-    CRITICAL QUALITY REQUIREMENTS (FILL THE CARDS):
-    1. EXTREME VERBOSITY FOR CARDS: For every single point in "strengths", "challenges", and "recommendations", you MUST write a detailed paragraph of 3-4 sentences (at least 50-80 words per bullet point). I want the UI cards to be fully populated with deep strategic text, not short phrases.
+    CRITICAL QUALITY REQUIREMENTS:
+    1. EXTREME VERBOSITY FOR CARDS: For every single point in "strengths", "challenges", and "recommendations", you MUST write a detailed paragraph of at least 4 sentences (at least 80 words per bullet point). 
     2. DEEP INSIGHTS: Every "insight" field must be a 500-word mini-essay providing technical and market analysis.
-    3. REAL-WORLD DATA: Use Google Search to find actual spectrum holdings (700MHz, 2.6GHz, 3.5GHz, 26GHz), precise 5G coverage %, latest subscriber numbers from 2024/2025 financial reports, and specific competitor names.
-    4. TECHNICAL SPECIFICITY: Discuss specific hardware (e.g., Huawei/Nokia/Ericsson gear), Massive MIMO configurations, and backhaul solutions relevant to ${operator}.
+    3. REAL-WORLD DATA: Use Google Search to find actual spectrum holdings, precise 5G coverage %, latest subscriber numbers from 2024/2025 financial reports, and specific competitor names.
+    4. TECHNICAL SPECIFICITY: Discuss specific hardware, Massive MIMO configurations, and backhaul solutions relevant to ${operator}.
 
     JSON Structure:
     {
@@ -73,10 +73,10 @@ export const generateFWAReport = async (country: string, operator: string, langu
       "country": "${country}",
       "painPoints": [{ 
         "title": "Comprehensive Market Barriers & Growth Constraints", 
-        "insight": "Extensive 500-word analysis of current market saturation and digital divide issues...", 
-        "strengths": ["Detailed 4-sentence paragraph about existing spectrum assets and how they provide a competitive edge in sub-6GHz coverage...", "Another detailed paragraph about tower density and existing fiber-to-the-site backhaul infrastructure..."], 
-        "challenges": ["Detailed 4-sentence paragraph about regulatory hurdles and spectrum auction costs in ${country}...", "Detailed 4-sentence paragraph about the impact of inflation on CPE procurement and consumer ARPU..."], 
-        "recommendations": ["Detailed 4-sentence tactical recommendation on deploying outdoor high-gain CPE for rural expansion...", "Detailed 4-sentence recommendation on leveraging 5G Standalone network slicing for tiered FWA services..."]
+        "insight": "Extensive 500-word analysis...", 
+        "strengths": ["Detailed 4-sentence paragraph...", "Another detailed paragraph..."], 
+        "challenges": ["Detailed 4-sentence paragraph...", "Detailed 4-sentence paragraph..."], 
+        "recommendations": ["Detailed 4-sentence paragraph...", "Detailed 4-sentence paragraph..."]
       }],
       "strategicPositioning": [{ "title": "Strategic FWA vs Fiber Competitive Landscape", "insight": "Full strategic essay...", "strengths": ["Detailed paragraph..."], "challenges": ["Detailed paragraph..."], "recommendations": ["Detailed paragraph..."] }],
       "valueProposition": {
