@@ -18,7 +18,6 @@ const cleanAndParseJSON = (text: string): FWAReport => {
   try {
     return JSON.parse(cleaned) as FWAReport;
   } catch (error: any) {
-    // Attempt fallback sanitization
     try {
       const sanitized = cleaned.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ');
       return JSON.parse(sanitized) as FWAReport;
@@ -32,17 +31,17 @@ const cleanAndParseJSON = (text: string): FWAReport => {
  * Generates an exhaustive FWA strategy report.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
-  // Always fetch fresh from process.env.API_KEY as per instructions
-  const apiKey = process.env.API_KEY;
+  // Check both standard and Vite-style environment variables
+  const apiKey = process.env.API_KEY || (process.env as any).VITE_API_KEY;
   
   if (!apiKey) {
-    throw new Error("Missing API Key. Please verify that 'API_KEY' is set in your environment variables.");
+    throw new Error("Missing API Credentials. Please ensure either 'API_KEY' or 'VITE_API_KEY' is set in your environment variables.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
   
   const prompt = `
-    Task: Generate a 10,000-word equivalent professional FWA (Fixed Wireless Access) Strategy Blueprint.
+    Task: Generate an EXHAUSTIVE professional FWA (Fixed Wireless Access) Strategy Blueprint.
     Target: ${operator} in ${country}
     Language: ${language}
 
@@ -112,7 +111,7 @@ export const chatWithInsight = async (
   reportContext: FWAReport, 
   language: Language
 ): Promise<string> => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = process.env.API_KEY || (process.env as any).VITE_API_KEY;
   if (!apiKey) throw new Error("API Key configuration error.");
   const ai = new GoogleGenAI({ apiKey });
   
