@@ -33,8 +33,6 @@ export const generateFWAReport = async (country: string, operator: string, langu
 
   const ai = new GoogleGenAI({ apiKey });
 
-  const isChinese = language === Language.CHINESE;
-
   const corePrompt = `
     Role: Senior Telecom Strategy Architect & Lead Market Analyst (A16z/Strategy& Style).
     Target: ${operator} in ${country} (Market Context: Focus on FWA deployment, 5G Spectral Strategy, ROI Analysis).
@@ -44,6 +42,7 @@ export const generateFWAReport = async (country: string, operator: string, langu
     
     CONTENT REQUIREMENTS (VERY IMPORTANT):
     - Each "insight" must be a long, data-rich paragraph (at least 150-200 words).
+    - "fwaPotential", "currentAssessment", and "futurePriorities" must be high-impact, professional summaries.
     - Every list (strengths, challenges, recommendations) must contain at least 5-7 items.
     - Technical evaluation must be thorough: mention specific 3GPP releases, beamforming techniques, and spectral efficiency ratios.
     - Spectrum Analysis: Research the latest 2024 spectrum holdings for ${operator} in ${country}.
@@ -54,6 +53,9 @@ export const generateFWAReport = async (country: string, operator: string, langu
       "operatorName": "${operator}",
       "country": "${country}",
       "executiveSummary": "A highly detailed, professional summary (300+ words) of the strategic outlook.",
+      "fwaPotential": "Extensive technical potential analysis for FWA in this market.",
+      "currentAssessment": "Detailed critique of current deployment status and competitive standing.",
+      "futurePriorities": "Top 3-5 critical strategic focuses for the 2025-2027 horizon.",
       "painPoints": [{ "title": "Section Title", "insight": "Extensive paragraph...", "strengths": ["Item 1", "Item 2", ...], "challenges": [...], "recommendations": [...] }],
       "strategicPositioning": [{ "title": "Positioning Factor", "insight": "Extensive paragraph...", "strengths": [...], "challenges": [...], "recommendations": [...] }],
       "valueProposition": {

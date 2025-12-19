@@ -226,17 +226,6 @@ const App: React.FC = () => {
                             Reset Model
                           </button>
                       </div>
-
-                      {/* Footer Signature */}
-                      <div className="pt-12 border-t border-foreground/5 flex items-center gap-4 grayscale opacity-40">
-                         <div className="w-10 h-10 bg-muted flex items-center justify-center">
-                           <User className="w-5 h-5" />
-                         </div>
-                         <div className="space-y-0.5">
-                           <div className="text-[9px] font-bold uppercase leading-none">Yeqi Wang</div>
-                           <div className="text-[8px] font-mono uppercase text-foreground/50">Lead Architect</div>
-                         </div>
-                      </div>
                    </div>
                 </aside>
 

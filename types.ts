@@ -35,6 +35,9 @@ export interface FWAReport {
   
   // High-level conclusion
   executiveSummary: string;
+  fwaPotential: string;       // New: FWA潜力
+  currentAssessment: string;   // New: 当前评价
+  futurePriorities: string;    // New: 未来重点
   
   // 1. Market Context & Pain Points
   painPoints: StrategicAnalysis[];

@@ -4,7 +4,7 @@ import { motion, Variants } from 'framer-motion';
 import { FWAReport, StrategicAnalysis, TechnicalFeature } from '../types';
 import SpectrumChart from './SpectrumChart';
 import { 
-  Target, Radio, Cpu, ShoppingBag, TrendingUp, Globe, ArrowUpRight, ShieldAlert, Microscope, Activity
+  Target, Radio, Cpu, ShoppingBag, TrendingUp, Globe, ArrowUpRight, ShieldAlert, Microscope, Activity, Zap, BarChart, Flag
 } from 'lucide-react';
 
 const sectionVariants: Variants = {
@@ -176,8 +176,8 @@ const ReportView: React.FC<{ report: FWAReport }> = ({ report }) => {
             <h2 className="text-4xl font-serif tracking-tighter leading-none italic">Strategic Audit.</h2>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-             <div className="lg:col-span-8 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pb-12 border-b border-white/10">
+             <div className="lg:col-span-12 space-y-6">
                 <p className="text-xl lg:text-3xl font-serif leading-snug italic text-primary">
                   "{report.expertSummary}"
                 </p>
@@ -186,12 +186,38 @@ const ReportView: React.FC<{ report: FWAReport }> = ({ report }) => {
                   {report.executiveSummary}
                 </p>
              </div>
+          </div>
+
+          {/* New Strategic KPI Modules */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+             <div className="p-6 bg-white/5 border-l-4 border-primary space-y-3">
+               <div className="flex items-center gap-2">
+                 <Zap className="w-4 h-4 text-primary" />
+                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40">FWA潜力</span>
+               </div>
+               <p className="text-[13px] font-medium leading-relaxed text-white/90">
+                 {report.fwaPotential}
+               </p>
+             </div>
              
-             <div className="lg:col-span-4 space-y-6">
-                <div className="p-6 bg-white/5 border-l-4 border-secondary">
-                  <div className="text-[8px] font-mono font-bold uppercase tracking-[0.4em] text-white/30 mb-2">DEPLOYMENT_VIABILITY</div>
-                  <div className="text-4xl font-serif leading-none tracking-tighter italic text-secondary">98.2<span className="text-sm font-sans not-italic font-bold ml-1">%</span></div>
-                </div>
+             <div className="p-6 bg-white/5 border-l-4 border-secondary space-y-3">
+               <div className="flex items-center gap-2">
+                 <BarChart className="w-4 h-4 text-secondary" />
+                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40">当前评价</span>
+               </div>
+               <p className="text-[13px] font-medium leading-relaxed text-white/90">
+                 {report.currentAssessment}
+               </p>
+             </div>
+
+             <div className="p-6 bg-white/5 border-l-4 border-accent space-y-3">
+               <div className="flex items-center gap-2">
+                 <Flag className="w-4 h-4 text-accent" />
+                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40">未来重点</span>
+               </div>
+               <p className="text-[13px] font-medium leading-relaxed text-white/90">
+                 {report.futurePriorities}
+               </p>
              </div>
           </div>
         </div>
