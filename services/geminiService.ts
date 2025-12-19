@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
@@ -48,9 +47,11 @@ const cleanAndParseJSON = (text: string): FWAReport => {
  * Generates an FWA strategy report using Gemini 3 Pro.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
+  // Use strictly process.env.API_KEY as requested
   const apiKey = process.env.API_KEY;
+  
   if (!apiKey) {
-    throw new Error("Configuration Error: API_KEY environment variable is not set. Please check your deployment environment variables.");
+    throw new Error("Missing API Credentials. Please ensure the 'API_KEY' environment variable is correctly configured in your deployment settings.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -131,7 +132,7 @@ export const chatWithInsight = async (
   language: Language
 ): Promise<string> => {
   const apiKey = process.env.API_KEY;
-  if (!apiKey) throw new Error("API Key is missing.");
+  if (!apiKey) throw new Error("API Key configuration error.");
   
   const ai = new GoogleGenAI({ apiKey });
   const systemContext = `You are a world-class Telecom Strategic Consultant. You have analyzed ${reportContext.operatorName} in ${reportContext.country}. Respond with extreme technical and financial depth. Use this context: ${JSON.stringify(reportContext).substring(0, 10000)}. Language: ${language}.`;
