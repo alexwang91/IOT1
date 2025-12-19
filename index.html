@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,28 +7,28 @@
     <title>TelcoInsight AI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Inter', 'system-ui', 'sans-serif'],
-              display: ['Calistoga', 'serif'],
+              sans: ['Outfit', 'system-ui', 'sans-serif'],
+              display: ['Outfit', 'sans-serif'],
               mono: ['JetBrains Mono', 'monospace'],
             },
             colors: {
-              background: '#FAFAFA',
-              foreground: '#0F172A',
-              muted: '#F1F5F9',
-              'muted-foreground': '#64748B',
-              accent: '#0052FF',
-              'accent-secondary': '#4D7CFF',
-              border: '#E2E8F0',
+              background: '#FFFFFF',
+              foreground: '#111827',
+              primary: '#3B82F6',
+              secondary: '#10B981',
+              accent: '#F59E0B',
+              muted: '#F3F4F6',
+              border: '#E5E7EB',
             },
-            backgroundImage: {
-              'accent-gradient': 'linear-gradient(135deg, #0052FF, #4D7CFF)',
+            boxShadow: {
+              none: 'none',
             }
           }
         }
@@ -35,27 +36,27 @@
     </script>
     <style>
       body {
-        background-color: #FAFAFA;
-        color: #0F172A;
+        background-color: #FFFFFF;
+        color: #111827;
+        font-family: 'Outfit', sans-serif;
       }
-      .gradient-text {
-        background: linear-gradient(to right, #0052FF, #4D7CFF);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+      .flat-card {
+        box-shadow: none !important;
+        border: 0 !important;
+      }
+      /* Remove all default transitions for a snappier feel */
+      * {
+        transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
       }
       .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
+        width: 8px;
       }
       .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
+        background: #F3F4F6;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #E2E8F0;
-        border-radius: 10px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #CBD5E1;
+        background: #3B82F6;
+        border-radius: 0px;
       }
     </style>
   <script type="importmap">
@@ -71,7 +72,7 @@
 }
 </script>
 </head>
-  <body class="antialiased selection:bg-accent/10 selection:text-accent">
+  <body class="antialiased selection:bg-primary/20 selection:text-primary">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

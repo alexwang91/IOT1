@@ -22,55 +22,55 @@ const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isLoading }) =>
 
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-5">
-          <div className="space-y-2">
-            <label className="font-mono text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400 ml-1">Market Geography</label>
+      <form onSubmit={handleSubmit} className="space-y-10">
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <label className="font-mono text-[11px] font-black uppercase tracking-[0.5em] text-foreground/40 ml-1">Market Geography</label>
             <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300">
-                <Globe className="w-4 h-4" />
+              <div className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20">
+                <Globe className="w-5 h-5" />
               </div>
               <input
                 type="text"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                placeholder="e.g. United Kingdom"
-                className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-slate-50/50 border border-slate-200 focus:bg-white focus:border-accent/40 focus:ring-4 focus:ring-accent/[0.02] outline-none transition-all font-medium text-[13px] text-slate-900 placeholder:text-slate-300"
+                placeholder="UNITED KINGDOM"
+                className="w-full pl-16 pr-6 py-5 rounded-md bg-white border-0 text-foreground font-bold text-lg placeholder:text-foreground/10 focus:ring-4 focus:ring-primary focus:outline-none transition-all uppercase tracking-tight"
                 required
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="font-mono text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400 ml-1">Strategic Target</label>
+          <div className="space-y-3">
+            <label className="font-mono text-[11px] font-black uppercase tracking-[0.5em] text-foreground/40 ml-1">Target Operator</label>
             <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300">
-                <Building2 className="w-4 h-4" />
+              <div className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20">
+                <Building2 className="w-5 h-5" />
               </div>
               <input
                 type="text"
                 value={operator}
                 onChange={(e) => setOperator(e.target.value)}
-                placeholder="e.g. Vodafone"
-                className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-slate-50/50 border border-slate-200 focus:bg-white focus:border-accent/40 focus:ring-4 focus:ring-accent/[0.02] outline-none transition-all font-medium text-[13px] text-slate-900 placeholder:text-slate-300"
+                placeholder="VODAFONE"
+                className="w-full pl-16 pr-6 py-5 rounded-md bg-white border-0 text-foreground font-bold text-lg placeholder:text-foreground/10 focus:ring-4 focus:ring-primary focus:outline-none transition-all uppercase tracking-tight"
                 required
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex bg-slate-50/50 p-1 rounded-xl border border-slate-200">
+          <div className="space-y-3">
+            <div className="flex bg-white p-1.5 rounded-md">
               <button
                 type="button"
                 onClick={() => setLang(Language.ENGLISH)}
-                className={`flex-1 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-[0.2em] transition-all duration-300 ${lang === Language.ENGLISH ? 'bg-white text-accent shadow-sm ring-1 ring-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`flex-1 py-4 rounded-sm text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-200 ${lang === Language.ENGLISH ? 'bg-primary text-white scale-100' : 'text-foreground/30 hover:bg-muted'}`}
               >
                 English
               </button>
               <button
                 type="button"
                 onClick={() => setLang(Language.CHINESE)}
-                className={`flex-1 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-[0.2em] transition-all duration-300 ${lang === Language.CHINESE ? 'bg-white text-accent shadow-sm ring-1 ring-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`flex-1 py-4 rounded-sm text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-200 ${lang === Language.CHINESE ? 'bg-primary text-white scale-100' : 'text-foreground/30 hover:bg-muted'}`}
               >
                 中文
               </button>
@@ -81,10 +81,10 @@ const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isLoading }) =>
         <button
           type="submit"
           disabled={isLoading || !country || !operator}
-          className="w-full py-5 bg-accent text-white rounded-2xl font-bold text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl shadow-accent/20 hover:bg-accent-secondary hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-500 disabled:opacity-40 disabled:translate-y-0 disabled:shadow-none"
+          className="w-full h-20 bg-foreground text-white rounded-md font-black text-[13px] uppercase tracking-[0.4em] flex items-center justify-center gap-5 shadow-none hover:bg-primary hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-20 disabled:scale-100"
         >
-          <span>Initiate Analysis</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>Initiate Strategic Analysis</span>
+          <ArrowRight className="w-6 h-6" />
         </button>
       </form>
     </div>

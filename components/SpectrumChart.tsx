@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { SpectrumBand } from '../types';
@@ -10,28 +11,28 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload as SpectrumBand;
     return (
-      <div className="bg-white border border-border p-4 rounded-2xl shadow-xl shadow-accent/5 backdrop-blur-md animate-fade-in-up">
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-8">
-            <span className="font-display text-lg text-foreground leading-none">{data.band}</span>
-            <span className="px-2 py-1 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-widest rounded-md border border-accent/10">
+      <div className="bg-foreground text-white p-6 border-l-8 border-primary animate-none">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between gap-12">
+            <span className="font-black text-2xl italic tracking-tighter leading-none">{data.band}</span>
+            <span className="px-2 py-0.5 bg-primary text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-sm">
               {data.technology}
             </span>
           </div>
-          <div className="h-px bg-border/50" />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="h-[2px] bg-white/10" />
+          <div className="grid grid-cols-2 gap-8">
             <div className="space-y-1">
-              <p className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-wider">Coverage</p>
+              <p className="text-[10px] font-mono font-black text-white/30 uppercase tracking-widest">Coverage</p>
               <div className="flex items-baseline gap-1">
-                <span className="text-xl font-display text-accent leading-none">{data.coverage}</span>
-                <span className="text-[10px] text-muted-foreground font-bold">%</span>
+                <span className="text-3xl font-black italic text-primary leading-none">{data.coverage}</span>
+                <span className="text-[11px] text-white/40 font-bold uppercase tracking-widest">%</span>
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-wider">Capacity</p>
+              <p className="text-[10px] font-mono font-black text-white/30 uppercase tracking-widest">Capacity</p>
               <div className="flex items-baseline gap-1">
-                <span className="text-xl font-display text-accent-secondary leading-none">{data.capacity}</span>
-                <span className="text-[10px] text-muted-foreground font-bold">%</span>
+                <span className="text-3xl font-black italic text-white leading-none">{data.capacity}</span>
+                <span className="text-[11px] text-white/40 font-bold uppercase tracking-widest">%</span>
               </div>
             </div>
           </div>
@@ -44,55 +45,52 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const SpectrumChart: React.FC<SpectrumChartProps> = ({ data }) => {
   return (
-    <div className="h-80 w-full">
+    <div className="h-96 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" opacity={0.5} />
+          <CartesianGrid strokeDasharray="0 0" vertical={false} stroke="#E5E7EB" strokeWidth={2} />
           <XAxis 
             dataKey="band" 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fill: '#64748B', fontSize: 10, fontWeight: 700, fontFamily: 'JetBrains Mono' }}
-            dy={10}
+            tick={{ fill: '#111827', fontSize: 11, fontWeight: 900, fontFamily: 'Outfit', textAnchor: 'middle' }}
+            dy={20}
           />
           <YAxis 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fill: '#64748B', fontSize: 10, fontFamily: 'JetBrains Mono' }} 
+            tick={{ fill: '#111827', fontSize: 10, fontWeight: 700, fontFamily: 'JetBrains Mono' }} 
             domain={[0, 100]}
           />
           <Tooltip 
-            cursor={{ fill: 'rgba(0, 82, 255, 0.05)', radius: 12 }}
+            cursor={{ fill: '#F3F4F6', radius: 0 }}
             content={<CustomTooltip />}
-            allowEscapeViewBox={{ x: false, y: true }}
+            allowEscapeViewBox={{ x: true, y: true }}
+            position={{ y: -100 }}
           />
           <Bar 
             dataKey="coverage" 
             name="Coverage" 
-            radius={[6, 6, 0, 0]} 
-            barSize={28}
-            isAnimationActive={true}
-            animationDuration={1500}
-            animationBegin={300}
+            radius={[0, 0, 0, 0]} 
+            barSize={32}
+            isAnimationActive={false}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-cov-${index}`} fill="#0052FF" className="hover:opacity-80 transition-opacity cursor-pointer" />
+              <Cell key={`cell-cov-${index}`} fill="#3B82F6" className="hover:opacity-80 cursor-pointer" />
             ))}
           </Bar>
           <Bar 
             dataKey="capacity" 
             name="Capacity" 
-            radius={[6, 6, 0, 0]} 
-            barSize={28}
-            isAnimationActive={true}
-            animationDuration={1500}
-            animationBegin={500}
+            radius={[0, 0, 0, 0]} 
+            barSize={32}
+            isAnimationActive={false}
           >
              {data.map((entry, index) => (
-              <Cell key={`cell-cap-${index}`} fill="#4D7CFF" opacity={0.4} className="hover:opacity-60 transition-opacity cursor-pointer" />
+              <Cell key={`cell-cap-${index}`} fill="#111827" className="hover:opacity-80 cursor-pointer" />
             ))}
           </Bar>
         </BarChart>

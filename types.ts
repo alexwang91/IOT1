@@ -12,72 +12,76 @@ export interface SpectrumBand {
   status: string; // e.g., "Allocated", "Auction Soon"
 }
 
-// New rich structure for detailed insights
 export interface StrategicAnalysis {
   title: string;
-  insight: string; // Detailed paragraph analysis
+  insight: string;
   strengths: string[];
-  challenges: string[]; // Weaknesses/Cons
-  recommendations: string[]; // Sales pitch/Advice
+  challenges: string[];
+  recommendations: string[];
+  expertCritique?: string; // Commentary from the Flash expert
+  researchDirectives?: string[]; // Areas needing further study
 }
 
-export interface ROIData {
-  npv: number;
-  irr: number;
-  paybackPeriod: number;
+export interface TechnicalFeature {
+  feature: string;
+  priority: 'High' | 'Medium' | 'Low';
+  description: string;
+  relevanceScore: number; // 0-100
 }
 
 export interface FWAReport {
   operatorName: string;
   country: string;
   
-  // 1. Pain Points
+  // High-level conclusion
+  executiveSummary: string;
+  
+  // 1. Market Context & Pain Points
   painPoints: StrategicAnalysis[];
 
   // 2. Strategic Positioning
   strategicPositioning: StrategicAnalysis[];
 
-  // 3. Value Proposition
+  // 3. Value Proposition (Consumer, Enterprise, Operator)
   valueProposition: {
     consumer: StrategicAnalysis;
     enterprise: StrategicAnalysis;
     operator: StrategicAnalysis;
   };
 
-  // 4. Spectrum
+  // 4. Spectrum Detail
   spectrumAnalysis: {
     overview: string;
     bands: SpectrumBand[];
     detailedAnalysis: StrategicAnalysis;
   };
 
-  // 5. Technical
+  // 5. Technical Capabilities (20+ features evaluated)
   technicalCapabilities: {
-    items: {
-        feature: string;
-        priority: 'High' | 'Medium' | 'Low';
-        description: string;
-    }[];
+    items: TechnicalFeature[];
     detailedAnalysis: StrategicAnalysis;
   };
 
-  // 6. Network
+  // 6. Network Planning & Optimization
   networkPlanning: StrategicAnalysis[];
 
-  // 7. Commercial
+  // 7. Commercial & GTM Strategy
   commercialStrategy: StrategicAnalysis[];
 
-  // 8. ROI
+  // 8. ROI & Business Modeling
   roiAnalysis: {
     summary: string;
     assumptions: string[];
     detailedAnalysis: StrategicAnalysis;
+    roiCalculatorLogic: string;
   };
 
-  // 9. Operations
+  // 9. Operations & Roadmap
   operations: StrategicAnalysis[];
   
-  // Grounding metadata for source attribution from Google Search
+  // Expert Meta
+  expertSummary: string; // Cynical summary of the report's validity
+  
   groundingChunks?: any[];
 }
 

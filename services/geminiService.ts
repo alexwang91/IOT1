@@ -1,11 +1,11 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
 /**
  * Robust JSON parser that handles LLM-specific formatting issues.
  */
-const cleanAndParseJSON = (text: string): FWAReport => {
+const cleanAndParseJSON = (text: string): any => {
   let cleaned = text.trim();
   const codeBlockMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
   if (codeBlockMatch) cleaned = codeBlockMatch[1];
@@ -17,98 +17,143 @@ const cleanAndParseJSON = (text: string): FWAReport => {
   }
 
   try {
-    return JSON.parse(cleaned) as FWAReport;
+    return JSON.parse(cleaned);
   } catch (error: any) {
-    try {
-      const sanitized = cleaned.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ');
-      return JSON.parse(sanitized) as FWAReport;
-    } catch (finalError) {
-      throw new Error(`Failed to parse AI output. Ensure API_KEY is valid. Error: ${error.message}`);
-    }
+    const sanitized = cleaned.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ');
+    return JSON.parse(sanitized);
   }
 };
 
 /**
- * Generates an exhaustive FWA strategy report.
- * Uses gemini-3-pro-preview for high-quality technical reasoning.
+ * Generates an exhaustive FWA strategy report using Gemini 3 Pro with Thinking Mode
+ * followed by a Flash Expert Review.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
-  // Accessing API_KEY strictly as required by developer guidelines.
-  // The system ensures process.env.API_KEY is available in the execution context.
   const apiKey = process.env.API_KEY;
-  
-  if (!apiKey) {
-    throw new Error("API Key is missing from process.env. Please verify your environment settings.");
-  }
+  if (!apiKey) throw new Error("API Key is missing.");
 
   const ai = new GoogleGenAI({ apiKey });
-  
-  const prompt = `
-    Role: Senior Telecom Strategy Consultant (Specializing in 5G & FWA).
-    Objective: Generate an EXHAUSTIVE, multi-dimensional Strategic Analysis.
-    Target Operator: ${operator}
-    Target Market: ${country}
+
+  // STAGE 1: CORE STRATEGIC GENERATION (Thinking Mode)
+  const corePrompt = `
+    Role: Senior Telecom Strategy Architect (Expert in 5G, FWA, and Spectral Economics).
+    Target: ${operator} in ${country} (Market Context: Focus on FWA vs Fiber, Spectrum n78/n77, ROI Modeling).
     Language: ${language}
 
-    MANDATORY DEPTH (完整信息要求):
-    1. Every JSON field must be populated with high-density, professional insights.
-    2. Analysis must include real-world 2024/2025 market trends, specific spectrum allocation (e.g., n77/n78 bands), and competitive landscape.
-    3. Insights should be technical (Massive MIMO, 5G SA vs NSA) and commercial (ARPU growth, customer churn reduction).
-    4. Bullet points must be detailed (min 3-4 sentences each) providing a "sales pitch" and technical "blueprint".
-    5. ROI analysis should list specific assumptions regarding subscriber acquisition costs (SAC) and network density.
+    TASK: Generate an exhaustive strategic blueprint for FWA deployment.
+    
+    SPECIFIC REQUIREMENTS:
+    1. Pain Points: Identify main frictions in the market (e.g. fiber penetration gaps, rural latency, high CAPEX).
+    2. Strategic Positioning: Is FWA a fiber complement or competitor? Define based on ${operator}'s portfolio.
+    3. Spectrum (CRITICAL): Detailed analysis of Romanian bands (3.5GHz/n78, 700MHz/n28, 26GHz/n258). Suggest strategies for refarming or sharing.
+    4. Technical evaluation of 20+ features: VoIP/VoLTE, TR-069/USP, EasyMesh, Wi-Fi 7, Slicing, Massive MIMO, etc.
+    5. GTM Strategy: Innovative pricing (周期性/无限量), OTT bundles (TV, Streaming), and channel mix.
+    6. Business Model: ROI Calculator parameters, implementation roadmap (milestones), and risk framework.
+    7. Global Case Studies: Reference similar markets (e.g., T-Mobile US, Optus Australia, or Vodafone UK).
 
-    Output format: STRICT JSON following this schema:
+    JSON SCHEMA:
     {
       "operatorName": "${operator}",
       "country": "${country}",
-      "painPoints": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
-      "strategicPositioning": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "executiveSummary": "...",
+      "painPoints": [{ "title": "...", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
+      "strategicPositioning": [{ "title": "...", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
       "valueProposition": {
-        "consumer": { "title": "B2C Value", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "enterprise": { "title": "B2B Value", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "operator": { "title": "Internal Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "consumer": { "title": "B2C", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] },
+        "enterprise": { "title": "B2B", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] },
+        "operator": { "title": "Internal", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }
       },
       "spectrumAnalysis": {
         "overview": "...",
-        "bands": [{ "band": "3.5GHz", "technology": "5G NR", "coverage": 85, "capacity": 90, "status": "Allocated" }],
-        "detailedAnalysis": { "title": "Spectral Efficiency", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "bands": [{ "band": "n78", "technology": "5G NR", "coverage": 70, "capacity": 90, "status": "Allocated" }],
+        "detailedAnalysis": { "title": "Spectral Efficiency", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }
       },
       "technicalCapabilities": {
-        "items": [{ "feature": "Massive MIMO 64T64R", "priority": "High", "description": "..." }],
-        "detailedAnalysis": { "title": "Technical Roadmap", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "items": [{ "feature": "Massive MIMO", "priority": "High", "description": "...", "relevanceScore": 95 }],
+        "detailedAnalysis": { "title": "Tech Stack", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }
       },
-      "networkPlanning": [{ "title": "Deployment Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
-      "commercialStrategy": [{ "title": "Market Penetration", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "networkPlanning": [{ "title": "Optimization", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
+      "commercialStrategy": [{ "title": "GTM", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
       "roiAnalysis": {
         "summary": "...",
-        "assumptions": ["Subscribers...", "CAPEX...", "OPEX..."],
-        "detailedAnalysis": { "title": "Financial Viability", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "assumptions": ["CAPEX...", "OPEX..."],
+        "detailedAnalysis": { "title": "Finance", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] },
+        "roiCalculatorLogic": "..."
       },
-      "operations": [{ "title": "Operational GTM", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }]
+      "operations": [{ "title": "Ops Roadmap", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }]
     }
   `;
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
-      contents: prompt,
-      config: {
-        tools: [{ googleSearch: {} }],
-        temperature: 0.1,
-      }
-    });
+  const coreResponse = await ai.models.generateContent({
+    model: 'gemini-3-pro-preview',
+    contents: corePrompt,
+    config: {
+      thinkingConfig: { thinkingBudget: 32768 },
+      maxOutputTokens: 64000, // To allow room for the thinking + large JSON
+      tools: [{ googleSearch: {} }],
+      temperature: 0.1,
+    }
+  });
 
-    const text = response.text;
-    if (!text) throw new Error("No data returned from Gemini 3 Pro.");
+  const coreReport = cleanAndParseJSON(coreResponse.text);
 
-    const report = cleanAndParseJSON(text);
-    report.groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+  // STAGE 2: EXPERT CRITIQUE (Flash Expert - Silent Role)
+  // This model acts as a "cynical reviewer" to identify uncertainties.
+  const critiquePrompt = `
+    Role: Senior Telecom Audit Expert. 
+    Task: Critically review the following Strategic Report for ${operator} in ${country}.
+    Report Data: ${JSON.stringify(coreReport)}
     
-    return report;
-  } catch (error: any) {
-    console.error("FWA Generation Error:", error);
-    throw error;
-  }
+    INSTRUCTIONS:
+    1. For each section, provide a short "expertCritique" (max 3 sentences) highlighting what might be too optimistic or risky.
+    2. List "researchDirectives" for things requiring field testing or regulatory verification.
+    3. Provide a final "expertSummary" judging the feasibility of the overall plan (Cynical/Professional tone).
+    4. Connect to the internet if needed to verify 2024 Romanian spectrum news or Vodafone specific announcements.
+    
+    Output Format: ONLY JSON containing:
+    {
+      "critiques": [ { "sectionTitle": "...", "critique": "...", "directives": ["..."] } ],
+      "expertSummary": "..."
+    }
+  `;
+
+  const critiqueResponse = await ai.models.generateContent({
+    model: 'gemini-3-flash-preview',
+    contents: critiquePrompt,
+    config: {
+      tools: [{ googleSearch: {} }],
+      responseMimeType: "application/json"
+    }
+  });
+
+  const critiqueData = JSON.parse(critiqueResponse.text);
+
+  // STAGE 3: MERGE ANALYTICS
+  // Map critiques back to the core report
+  const mergeCritique = (section: any, title: string) => {
+    const crit = critiqueData.critiques.find((c: any) => c.sectionTitle.includes(title) || title.includes(c.sectionTitle));
+    if (crit && section) {
+      section.expertCritique = crit.critique;
+      section.researchDirectives = crit.directives;
+    }
+  };
+
+  coreReport.painPoints.forEach((p: any) => mergeCritique(p, p.title));
+  coreReport.strategicPositioning.forEach((p: any) => mergeCritique(p, p.title));
+  mergeCritique(coreReport.valueProposition.consumer, "B2C");
+  mergeCritique(coreReport.valueProposition.enterprise, "B2B");
+  mergeCritique(coreReport.valueProposition.operator, "Internal");
+  mergeCritique(coreReport.spectrumAnalysis.detailedAnalysis, "Spectral");
+  mergeCritique(coreReport.technicalCapabilities.detailedAnalysis, "Tech");
+  coreReport.networkPlanning.forEach((p: any) => mergeCritique(p, p.title));
+  coreReport.commercialStrategy.forEach((p: any) => mergeCritique(p, p.title));
+  mergeCritique(coreReport.roiAnalysis.detailedAnalysis, "Finance");
+  coreReport.operations.forEach((p: any) => mergeCritique(p, p.title));
+  
+  coreReport.expertSummary = critiqueData.expertSummary;
+  coreReport.groundingChunks = coreResponse.candidates?.[0]?.groundingMetadata?.groundingChunks;
+
+  return coreReport as FWAReport;
 };
 
 /**
@@ -124,11 +169,14 @@ export const chatWithInsight = async (
   if (!apiKey) throw new Error("API Key missing.");
   const ai = new GoogleGenAI({ apiKey });
   
-  const systemContext = `Context: You are a Top-tier Telecom Consultant analyzing ${reportContext.operatorName} in ${reportContext.country}. You have the following report data: ${JSON.stringify(reportContext).substring(0, 15000)}. Language: ${language}. Answer with authority and technical depth.`;
+  const systemContext = `Context: You are a Senior Telecom Consultant. Context: ${JSON.stringify(reportContext).substring(0, 20000)}. Language: ${language}. Use the thinking process for complex questions.`;
 
   const chat = ai.chats.create({
     model: 'gemini-3-pro-preview',
-    config: { systemInstruction: systemContext },
+    config: { 
+      systemInstruction: systemContext,
+      thinkingConfig: { thinkingBudget: 16000 }
+    },
     history: history.map(h => ({
       role: h.role,
       parts: [{ text: h.text }]
@@ -136,5 +184,5 @@ export const chatWithInsight = async (
   });
 
   const response = await chat.sendMessage({ message: newMessage });
-  return response.text || "Strategic response could not be generated.";
+  return response.text || "No response generated.";
 };

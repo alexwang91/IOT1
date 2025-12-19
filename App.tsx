@@ -5,7 +5,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Zap, Search, ShieldAlert, User, Sparkles } from 'lucide-react';
+import { MessageSquare, Zap, Search, ShieldAlert, User, Sparkles, Layout } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -31,165 +31,177 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans selection:bg-accent/10 selection:text-accent">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
       <main className="flex-1">
         {!report && !loading && !error ? (
-          <div className="max-w-6xl mx-auto px-6 lg:px-12 py-12 lg:py-16 flex flex-col justify-center min-h-[90vh]">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-              
-              {/* Left Column: Strategic Content */}
-              <div className="lg:col-span-7 space-y-10">
-                <div className="flex items-center gap-3 animate-fade-in-up">
-                  <div className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center shadow-sm">
-                    <Zap className="text-accent w-5 h-5" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-display text-xl tracking-tight leading-none text-slate-900">TelcoInsight</span>
-                    <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest mt-1">Intelligence Module</span>
-                  </div>
-                </div>
+          <div className="relative overflow-hidden min-h-screen flex flex-col justify-center">
+            {/* Background Decoration */}
+            <div className="absolute top-0 right-0 w-[40vw] h-[40vw] bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[20vw] h-[20vw] bg-accent/5 -translate-x-1/2 translate-y-1/4 rotate-45" />
 
-                <div className="space-y-6 animate-fade-in-up delay-75">
-                  <h1 className="text-4xl lg:text-[3.5rem] font-display leading-[1.1] tracking-tight text-slate-900">
-                    Strategic <span className="text-accent italic font-light">Market</span> <br/> Logic for Carriers.
-                  </h1>
-                  <p className="text-slate-500 text-base lg:text-lg max-w-md font-normal leading-relaxed">
-                    Automated spectral modeling and commercial roadmaps engineered for the next generation of global telecommunications.
-                  </p>
-                </div>
+            <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full relative z-10 py-20">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
                 
-                {/* Stats & Author Profile - Perfectly Aligned Row */}
-                <div className="flex flex-col md:flex-row items-center gap-10 pt-10 animate-fade-in-up delay-100 border-t border-slate-200/60">
-                  <div className="flex gap-10">
-                    <div className="space-y-0.5">
-                      <div className="text-2xl font-display text-slate-900 font-light">150+</div>
-                      <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">Global Nodes</div>
+                {/* Left Column: Strategic Content */}
+                <div className="lg:col-span-7 space-y-12">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-md">
+                      <Zap className="text-white w-6 h-6" />
                     </div>
-                    <div className="space-y-0.5">
-                      <div className="text-2xl font-display text-slate-900 font-light">98.2%</div>
-                      <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">Model Precision</div>
-                    </div>
-                  </div>
-
-                  <div className="hidden md:block w-px h-10 bg-slate-200" />
-
-                  <div className="flex items-center gap-4 group">
-                    <div className="w-11 h-11 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-300 shadow-sm transition-transform group-hover:scale-105">
-                       <User className="w-5 h-5" />
-                    </div>
-                    <div className="space-y-0.5 text-left">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-display text-lg tracking-tight text-slate-800 font-normal leading-none">Yeqi Wang</h3>
-                        <span className="px-1.5 py-0.5 bg-accent/5 text-accent text-[8px] font-bold uppercase tracking-widest rounded-md border border-accent/10">A16z Alum</span>
-                      </div>
-                      <p className="text-[10px] text-slate-400 font-semibold tracking-wide">Strategic Architect</p>
+                    <div className="flex flex-col">
+                      <span className="font-bold text-2xl tracking-tight leading-none text-foreground uppercase italic">TelcoInsight</span>
+                      <span className="text-[10px] font-mono font-black text-primary uppercase tracking-[0.3em] mt-1">Strategic AI Module</span>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Right Column: Refined Precision Console */}
-              <div className="lg:col-span-5 animate-fade-in-up delay-150">
-                <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-[0_12px_40px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-3xl -mr-16 -mt-16 group-hover:bg-accent/10 transition-colors duration-1000" />
+                  <div className="space-y-6">
+                    <h1 className="text-6xl lg:text-8xl font-extrabold leading-[0.95] tracking-tight text-foreground">
+                      PRECISION <br/>
+                      <span className="text-primary">FWA LOGIC.</span>
+                    </h1>
+                    <p className="text-foreground/70 text-xl lg:text-2xl max-w-xl font-medium leading-tight">
+                      Grounded spectral modeling and deployment roadmaps for global telecommunications leaders.
+                    </p>
+                  </div>
                   
-                  <div className="relative z-10 space-y-8">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-[0.4em] text-slate-300">Analyzer Active</span>
+                  {/* Stats & Profile Block */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t-8 border-foreground">
+                    <div className="flex gap-12">
+                      <div className="space-y-1">
+                        <div className="text-4xl font-extrabold text-foreground tracking-tighter">150+</div>
+                        <div className="text-[10px] font-mono font-black text-foreground/40 uppercase tracking-widest">Global Nodes</div>
                       </div>
-                      <h4 className="text-slate-900 font-display text-2xl tracking-tight font-normal">Command Console</h4>
+                      <div className="space-y-1">
+                        <div className="text-4xl font-extrabold text-primary tracking-tighter">98.2%</div>
+                        <div className="text-[10px] font-mono font-black text-foreground/40 uppercase tracking-widest">Model Precision</div>
+                      </div>
                     </div>
-                    
-                    <InputSection onGenerate={handleGenerate} isLoading={loading} />
-                    
-                    <div className="pt-6 border-t border-slate-100 flex items-center justify-center gap-2 text-slate-300">
-                      <Sparkles className="w-3.5 h-3.5 opacity-30" />
-                      <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-300">Encrypted Logic Stream</span>
+
+                    <div className="flex items-center gap-5">
+                      <div className="w-14 h-14 bg-muted flex items-center justify-center text-foreground/20 rounded-md">
+                         <User className="w-7 h-7" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-xl font-extrabold tracking-tight text-foreground leading-none">Yeqi Wang</h3>
+                          <span className="px-1.5 py-0.5 bg-accent text-white text-[9px] font-black uppercase tracking-widest rounded">Architect</span>
+                        </div>
+                        <p className="text-[11px] text-foreground/40 font-bold tracking-wide uppercase">Lead Strategic Alumni</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
+                {/* Right Column: Console UI */}
+                <div className="lg:col-span-5">
+                  <div className="bg-muted p-12 rounded-lg border-b-[12px] border-primary">
+                    <div className="space-y-8">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-secondary" />
+                          <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-foreground/30">System Link Active</span>
+                        </div>
+                        <h4 className="text-foreground text-3xl font-extrabold tracking-tight">Deployment Console</h4>
+                      </div>
+                      
+                      <InputSection onGenerate={handleGenerate} isLoading={loading} />
+                      
+                      <div className="pt-8 border-t-2 border-border flex items-center justify-center gap-3">
+                        <Sparkles className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-mono font-black uppercase tracking-[0.2em] text-foreground/20 italic">Encrypted Analysis Stream</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         ) : (
-          <div className="w-full max-w-7xl mx-auto px-6 py-12">
+          <div className="w-full">
             {loading && (
-              <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-12 animate-fade-in-up">
-                 <div className="relative">
-                   <div className="w-20 h-20 rounded-full border-t border-accent/20 border-t-accent animate-spin" />
-                   <Search className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-accent animate-pulse" />
+              <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-12">
+                 <div className="w-24 h-24 bg-primary text-white flex items-center justify-center rounded-lg animate-pulse">
+                   <Search className="w-10 h-10" />
                  </div>
                  <div className="space-y-4">
-                   <h3 className="font-display text-3xl text-slate-900 tracking-tight font-normal">Synthesizing Market Signal</h3>
-                   <p className="text-slate-400 text-[11px] font-mono uppercase tracking-[0.5em] font-bold">Accessing Spectral Registry Nodes</p>
+                   <h3 className="text-5xl font-extrabold text-foreground tracking-tighter">Synthesizing Market Logic...</h3>
+                   <div className="flex items-center justify-center gap-2">
+                      <div className="h-1 w-12 bg-primary" />
+                      <p className="text-foreground font-mono text-[11px] uppercase tracking-[0.5em] font-black">Connecting Registry</p>
+                   </div>
                  </div>
               </div>
             )}
 
             {error && (
-              <div className="max-w-xl mx-auto text-center space-y-10 py-32 animate-fade-in-up">
-                <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto text-rose-500 border border-rose-100">
-                  <ShieldAlert className="w-7 h-7" />
+              <div className="max-w-2xl mx-auto text-center space-y-12 py-32 px-6">
+                <div className="w-20 h-20 bg-accent text-white flex items-center justify-center mx-auto rounded-md">
+                  <ShieldAlert className="w-10 h-10" />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-display text-3xl tracking-tight font-normal">Access Interrupted</h3>
-                  <div className="p-8 bg-white border border-slate-200 rounded-[2rem] text-sm text-slate-500 font-mono leading-relaxed break-words text-left shadow-sm">
+                  <h3 className="text-5xl font-extrabold tracking-tighter">Access Refused.</h3>
+                  <div className="p-10 bg-muted text-lg text-foreground font-mono leading-tight break-words text-left border-l-[12px] border-accent">
                     {error}
                   </div>
                 </div>
                 <button 
                   onClick={() => { setError(null); setLoading(false); }}
-                  className="px-10 py-5 bg-slate-900 text-white text-[11px] font-bold uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-800 transition-all shadow-lg active:scale-95"
+                  className="w-full py-6 bg-foreground text-white text-[12px] font-black uppercase tracking-[0.3em] rounded-md hover:bg-primary transition-all hover:scale-105"
                 >
-                  Return to Dashboard
+                  Return to Base
                 </button>
               </div>
             )}
 
             {report && !loading && (
-              <div className="animate-fade-in-up">
-                <div className="mb-12 flex flex-col lg:flex-row lg:items-center justify-between gap-10 pb-12 border-b border-slate-200/60">
-                  <div className="space-y-4 text-center lg:text-left">
-                    <div className="flex items-center justify-center lg:justify-start gap-3">
-                      <div className="px-3 py-1 bg-accent/5 text-accent text-[9px] font-bold uppercase tracking-[0.2em] rounded-md border border-accent/10">Strategic Briefing v25.1</div>
-                      <span className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-slate-300">Level 4 Executive Auth</span>
+              <div className="bg-background">
+                {/* Header Section with Bold Block */}
+                <div className="bg-foreground text-white py-24 px-8 lg:px-12 mb-20">
+                  <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-4">
+                        <div className="px-3 py-1 bg-primary text-white text-[10px] font-black uppercase tracking-[0.3em] rounded">STRAT_BRIEF v25.1</div>
+                        <span className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-white/30 italic">L4 Executive Auth</span>
+                      </div>
+                      <h1 className="text-7xl lg:text-[7.5rem] font-extrabold tracking-tighter leading-[0.85]">
+                        {report.operatorName.toUpperCase()} <br/>
+                        <span className="text-primary">{report.country.toUpperCase()}</span>
+                      </h1>
                     </div>
-                    <h1 className="font-display text-4xl lg:text-6xl text-slate-900 tracking-tight leading-none font-normal">
-                      {report.operatorName} <span className="text-slate-200 font-sans font-thin">/</span> <span className="text-slate-400 font-sans font-light">{report.country}</span>
-                    </h1>
-                  </div>
-                  <div className="flex flex-wrap items-center justify-center gap-4">
-                    <button
-                      onClick={() => setIsChatOpen(true)}
-                      className="px-7 py-4 bg-accent text-white font-bold rounded-xl shadow-xl shadow-accent/10 hover:shadow-accent/20 hover:-translate-y-1 transition-all flex items-center gap-3 text-[10px] uppercase tracking-[0.2em]"
-                    >
-                      <MessageSquare className="w-4 h-4" />
-                      Consult Expert
-                    </button>
-                    <button 
-                      onClick={() => { setReport(null); setError(null); }}
-                      className="px-7 py-4 border border-slate-200 bg-white text-slate-500 font-bold rounded-xl hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-3 text-[10px] uppercase tracking-[0.2em]"
-                    >
-                      <Search className="w-4 h-4" />
-                      New Task
-                    </button>
+                    <div className="flex flex-col sm:flex-row items-stretch gap-4">
+                      <button
+                        onClick={() => setIsChatOpen(true)}
+                        className="px-10 h-16 bg-primary text-white font-black rounded-md hover:scale-105 transition-all flex items-center justify-center gap-4 text-[11px] uppercase tracking-[0.3em]"
+                      >
+                        <MessageSquare className="w-5 h-5" />
+                        Consult Expert
+                      </button>
+                      <button 
+                        onClick={() => { setReport(null); setError(null); }}
+                        className="px-10 h-16 bg-white text-foreground font-black rounded-md hover:scale-105 transition-all flex items-center justify-center gap-4 text-[11px] uppercase tracking-[0.3em]"
+                      >
+                        <Search className="w-5 h-5" />
+                        New Analysis
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <ReportView report={report} />
+                
+                <div className="max-w-7xl mx-auto px-8 lg:px-12 pb-32">
+                  <ReportView report={report} />
+                </div>
               </div>
             )}
           </div>
         )}
       </main>
 
-      {/* Chat UI Overlay */}
+      {/* Chat UI Overlay - Flat Slide-out */}
       {report && (
         <div 
           className={`
-            fixed inset-y-0 right-0 z-[60] w-full md:w-[480px] transform transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+            fixed inset-y-0 right-0 z-[60] w-full md:w-[500px] transform transition-transform duration-500 ease-in-out border-l-[8px] border-primary
             ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}
           `}
         >
@@ -203,7 +215,7 @@ const App: React.FC = () => {
       
       {isChatOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/5 backdrop-blur-[1px] z-[55] transition-opacity duration-700" 
+          className="fixed inset-0 bg-foreground/20 z-[55]" 
           onClick={() => setIsChatOpen(false)}
         />
       )}
