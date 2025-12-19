@@ -5,7 +5,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Search, ShieldAlert, User, Radio, BarChart3, Globe2, Activity } from 'lucide-react';
+import { MessageSquare, Search, ShieldAlert, User, Radio, BarChart3, Globe2, Activity, ChevronRight } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -30,6 +30,21 @@ const App: React.FC = () => {
     }
   };
 
+  const navItems = [
+    { id: 'summary', label: 'Strategic Audit' },
+    { id: 'dynamics', label: 'Market Dynamics' },
+    { id: 'propositions', label: 'Value Propositions' },
+    { id: 'spectrum', label: 'Spectral Footprint' },
+    { id: 'technical', label: 'Technical Stack' },
+    { id: 'roi', label: 'ROI Modeling' },
+    { id: 'sources', label: 'Sources' },
+  ];
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
       <main className="flex-1">
@@ -43,21 +58,20 @@ const App: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
                 
                 {/* Left Column: Logo, Headlines, Author & Stats */}
-                <div className="lg:col-span-7 space-y-12">
+                <div className="lg:col-span-7 space-y-10">
                   <div className="flex items-center gap-4 group cursor-default">
-                    <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-none transform transition-transform group-hover:rotate-180 duration-700">
-                      <Radio className="text-white w-6 h-6" />
+                    <div className="w-10 h-10 bg-primary flex items-center justify-center transform transition-transform group-hover:rotate-180 duration-700">
+                      <Radio className="text-white w-5 h-5" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-serif text-2xl tracking-tighter leading-none text-foreground uppercase italic">TelcoInsight AI</span>
-                      <span className="text-[8px] font-mono font-bold uppercase tracking-[0.4em] text-foreground/30">Strategic Analytics Platform</span>
+                      <span className="font-serif text-xl tracking-tighter leading-none text-foreground uppercase italic">TelcoInsight AI</span>
+                      <span className="text-[7px] font-mono font-bold uppercase tracking-[0.4em] text-foreground/30">Strategic Analytics Platform</span>
                     </div>
                   </div>
 
-                  <div className="space-y-8">
-                    <div className="space-y-4">
-                      <span className="text-primary font-mono font-bold uppercase tracking-[0.4em] text-[10px]">Strategic_Insight_Protocol_v4</span>
-                      <h1 className="text-6xl lg:text-8xl font-serif leading-[0.9] tracking-tighter text-foreground">
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <h1 className="text-5xl lg:text-7xl font-serif leading-[0.9] tracking-tighter text-foreground">
                         FWA STRATEGIC <br/>
                         <span className="text-primary italic">ANALYSIS ENGINE.</span>
                       </h1>
@@ -67,7 +81,6 @@ const App: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Relocated Author & Stats Grid under Welcome Message */}
                   <div className="space-y-6 pt-4 max-w-xl">
                     <div className="bg-white/40 backdrop-blur-xl border border-foreground/5 p-6 flex items-center gap-6 group">
                       <div className="w-14 h-14 bg-foreground/5 flex items-center justify-center rounded-none border border-foreground/5 group-hover:bg-foreground group-hover:text-white transition-all duration-300">
@@ -86,7 +99,7 @@ const App: React.FC = () => {
                       <div className="p-6 bg-foreground text-white flex flex-col justify-between h-32 group hover:bg-primary transition-colors duration-500">
                         <div className="flex justify-between items-start">
                           <Globe2 className="w-5 h-5 opacity-30 group-hover:opacity-100 transition-opacity" />
-                          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40">Global Nodes</span>
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40">Global Customers</span>
                         </div>
                         <div className="text-4xl font-serif italic tracking-tighter leading-none">150+</div>
                       </div>
@@ -101,7 +114,6 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right Column: Analyzer Console */}
                 <div className="lg:col-span-5 sticky top-12">
                   <div className="bg-muted p-10 border-l-[12px] border-primary">
                     <div className="space-y-8">
@@ -159,42 +171,80 @@ const App: React.FC = () => {
             )}
 
             {report && !loading && (
-              <div className="bg-background">
-                {/* Header Section */}
-                <div className="bg-foreground text-white py-32 px-8 lg:px-12 mb-20 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-full h-full bg-primary/5 opacity-50 blur-[120px]" />
-                  <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-16 relative z-10">
-                    <div className="space-y-10">
-                      <div className="flex items-center gap-6">
-                        <div className="px-4 py-1.5 bg-primary text-white text-[10px] font-bold uppercase tracking-[0.4em]">SYSTEM_OUTPUT_v25.2</div>
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.5em] text-white/30 italic">High_Density_Profile</span>
+              <div className="flex h-screen bg-background overflow-hidden">
+                {/* Left Sidebar Navigation */}
+                <aside className="w-[300px] lg:w-[380px] border-r border-foreground/5 bg-white flex flex-col shrink-0 sticky top-0 overflow-y-auto custom-scrollbar">
+                   <div className="p-8 space-y-10">
+                      {/* Condensed Header */}
+                      <div className="space-y-6">
+                         <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setReport(null)}>
+                            <div className="w-8 h-8 bg-primary flex items-center justify-center">
+                              <Radio className="text-white w-4 h-4" />
+                            </div>
+                            <span className="font-serif text-base tracking-tighter text-foreground uppercase italic leading-none">TelcoInsight</span>
+                         </div>
+                         <div className="space-y-1 pt-2">
+                           <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-foreground/30">Active_Entity</div>
+                           <h2 className="text-3xl font-serif tracking-tighter leading-tight italic text-foreground">
+                             {report.operatorName}
+                           </h2>
+                           <p className="text-primary font-bold text-sm tracking-tight">{report.country}</p>
+                         </div>
                       </div>
-                      <h1 className="text-7xl lg:text-9xl font-serif tracking-tighter leading-[0.8] uppercase italic">
-                        {report.operatorName} <br/>
-                        <span className="text-primary not-italic">{report.country}</span>
-                      </h1>
-                    </div>
-                    <div className="flex flex-col sm:flex-row items-stretch gap-6">
-                      <button
-                        onClick={() => setIsChatOpen(true)}
-                        className="px-12 h-20 bg-primary text-white font-bold rounded-none hover:scale-105 transition-all flex items-center justify-center gap-6 text-[12px] uppercase tracking-[0.4em]"
-                      >
-                        <MessageSquare className="w-6 h-6" />
-                        Consult Expert
-                      </button>
-                      <button 
-                        onClick={() => { setReport(null); setError(null); }}
-                        className="px-12 h-20 bg-white text-foreground font-bold rounded-none hover:scale-105 transition-all flex items-center justify-center gap-6 text-[12px] uppercase tracking-[0.4em]"
-                      >
-                        <Search className="w-6 h-6" />
-                        Reset Model
-                      </button>
-                    </div>
+
+                      {/* Sticky Navigation Menu */}
+                      <nav className="space-y-1">
+                        <div className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-foreground/20 mb-4 px-2">Navigation_Index</div>
+                        {navItems.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => scrollToSection(item.id)}
+                            className="w-full flex items-center justify-between group p-3 hover:bg-muted transition-all text-left rounded-sm"
+                          >
+                            <span className="text-[11px] font-bold uppercase tracking-widest text-foreground/60 group-hover:text-foreground transition-colors">
+                              {item.label}
+                            </span>
+                            <ChevronRight className="w-3.5 h-3.5 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                          </button>
+                        ))}
+                      </nav>
+
+                      {/* Action Buttons - Condensed */}
+                      <div className="pt-6 space-y-3">
+                         <button
+                            onClick={() => setIsChatOpen(true)}
+                            className="w-full h-12 bg-primary text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 transition-all"
+                          >
+                            <MessageSquare className="w-4 h-4" />
+                            Consult Expert
+                          </button>
+                          <button 
+                            onClick={() => { setReport(null); setError(null); }}
+                            className="w-full h-12 bg-foreground text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-primary transition-all"
+                          >
+                            <Search className="w-4 h-4" />
+                            Reset Model
+                          </button>
+                      </div>
+
+                      {/* Footer Signature */}
+                      <div className="pt-12 border-t border-foreground/5 flex items-center gap-4 grayscale opacity-40">
+                         <div className="w-10 h-10 bg-muted flex items-center justify-center">
+                           <User className="w-5 h-5" />
+                         </div>
+                         <div className="space-y-0.5">
+                           <div className="text-[9px] font-bold uppercase leading-none">Yeqi Wang</div>
+                           <div className="text-[8px] font-mono uppercase text-foreground/50">Lead Architect</div>
+                         </div>
+                      </div>
+                   </div>
+                </aside>
+
+                {/* Right Scrollable Content */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar scroll-smooth">
+                  <div className="max-w-6xl mx-auto p-6 lg:p-12">
+                    <ReportView report={report} />
                   </div>
-                </div>
-                
-                <div className="max-w-7xl mx-auto px-8 lg:px-12 pb-32">
-                  <ReportView report={report} />
                 </div>
               </div>
             )}
@@ -206,7 +256,7 @@ const App: React.FC = () => {
       {report && (
         <div 
           className={`
-            fixed inset-y-0 right-0 z-[60] w-full md:w-[550px] transform transition-transform duration-700 ease-in-out border-l-[12px] border-primary
+            fixed inset-y-0 right-0 z-[60] w-full md:w-[500px] transform transition-transform duration-700 ease-in-out border-l-[8px] border-primary
             ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}
           `}
         >
