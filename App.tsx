@@ -5,7 +5,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Zap, Search, ShieldAlert, User, Sparkles, Layout } from 'lucide-react';
+import { MessageSquare, Zap, Search, ShieldAlert, User, Sparkles } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -35,81 +35,76 @@ const App: React.FC = () => {
       <main className="flex-1">
         {!report && !loading && !error ? (
           <div className="relative overflow-hidden min-h-screen flex flex-col justify-center">
-            {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-[40vw] h-[40vw] bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/4" />
-            <div className="absolute bottom-0 left-0 w-[20vw] h-[20vw] bg-accent/5 -translate-x-1/2 translate-y-1/4 rotate-45" />
+            {/* Background Decoration - More vibrant for frosted glass visibility */}
+            <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-accent/10 -translate-x-1/2 translate-y-1/4 rotate-45 blur-3xl" />
 
-            <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full relative z-10 py-20">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full relative z-10 py-12 lg:py-20">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
                 
-                {/* Left Column: Strategic Content */}
-                <div className="lg:col-span-7 space-y-12">
+                {/* Left Column: Welcome & Strategic Content */}
+                <div className="lg:col-span-7 space-y-10 lg:pr-10">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-md">
-                      <Zap className="text-white w-6 h-6" />
+                    <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-md">
+                      <Zap className="text-white w-5 h-5" />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-2xl tracking-tight leading-none text-foreground uppercase italic">TelcoInsight</span>
-                      <span className="text-[10px] font-mono font-black text-primary uppercase tracking-[0.3em] mt-1">Strategic AI Module</span>
-                    </div>
+                    <span className="font-black text-xl tracking-tight leading-none text-foreground uppercase italic">TelcoInsight</span>
                   </div>
 
                   <div className="space-y-6">
-                    <h1 className="text-6xl lg:text-8xl font-extrabold leading-[0.95] tracking-tight text-foreground">
-                      PRECISION <br/>
-                      <span className="text-primary">FWA LOGIC.</span>
-                    </h1>
-                    <p className="text-foreground/70 text-xl lg:text-2xl max-w-xl font-medium leading-tight">
-                      Grounded spectral modeling and deployment roadmaps for global telecommunications leaders.
+                    <div className="space-y-2">
+                      <span className="text-primary font-black uppercase tracking-[0.4em] text-xs">Strategic Intelligence Dashboard</span>
+                      <h1 className="text-5xl lg:text-7xl font-extrabold leading-[1] tracking-tighter text-foreground">
+                        ENGINEERING <br/>
+                        <span className="text-primary">FWA EXCELLENCE.</span>
+                      </h1>
+                    </div>
+                    <p className="text-foreground/60 text-lg lg:text-xl max-w-xl font-medium leading-relaxed">
+                      Deploy grounded spectral modeling and commercial roadmaps. We provide the logic required for the next generation of fixed wireless deployment.
                     </p>
-                  </div>
-                  
-                  {/* Stats & Profile Block */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t-8 border-foreground">
-                    <div className="flex gap-12">
-                      <div className="space-y-1">
-                        <div className="text-4xl font-extrabold text-foreground tracking-tighter">150+</div>
-                        <div className="text-[10px] font-mono font-black text-foreground/40 uppercase tracking-widest">Global Nodes</div>
-                      </div>
-                      <div className="space-y-1">
-                        <div className="text-4xl font-extrabold text-primary tracking-tighter">98.2%</div>
-                        <div className="text-[10px] font-mono font-black text-foreground/40 uppercase tracking-widest">Model Precision</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 bg-muted flex items-center justify-center text-foreground/20 rounded-md">
-                         <User className="w-7 h-7" />
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-xl font-extrabold tracking-tight text-foreground leading-none">Yeqi Wang</h3>
-                          <span className="px-1.5 py-0.5 bg-accent text-white text-[9px] font-black uppercase tracking-widest rounded">Architect</span>
-                        </div>
-                        <p className="text-[11px] text-foreground/40 font-bold tracking-wide uppercase">Lead Strategic Alumni</p>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
-                {/* Right Column: Console UI */}
-                <div className="lg:col-span-5">
-                  <div className="bg-muted p-12 rounded-lg border-b-[12px] border-primary">
-                    <div className="space-y-8">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-secondary" />
-                          <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-foreground/30">System Link Active</span>
-                        </div>
-                        <h4 className="text-foreground text-3xl font-extrabold tracking-tight">Deployment Console</h4>
+                {/* Right Column: Console, Author & Stats */}
+                <div className="lg:col-span-5 space-y-8">
+                  {/* Deployment Console */}
+                  <div className="bg-muted p-10 rounded-lg border-l-[10px] border-primary">
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                         <h4 className="text-foreground text-2xl font-extrabold tracking-tight uppercase italic">Analyzer</h4>
+                         <div className="flex items-center gap-2">
+                           <div className="w-2 h-2 bg-secondary animate-pulse" />
+                           <span className="text-[9px] font-mono font-black uppercase tracking-widest text-foreground/30">System Ready</span>
+                         </div>
                       </div>
                       
                       <InputSection onGenerate={handleGenerate} isLoading={loading} />
-                      
-                      <div className="pt-8 border-t-2 border-border flex items-center justify-center gap-3">
-                        <Sparkles className="w-4 h-4 text-primary" />
-                        <span className="text-[10px] font-mono font-black uppercase tracking-[0.2em] text-foreground/20 italic">Encrypted Analysis Stream</span>
+                    </div>
+                  </div>
+
+                  {/* Author Card - Frosted Glass Effect */}
+                  <div className="bg-white/40 backdrop-blur-xl border border-white/40 p-8 rounded-lg flex items-center gap-6">
+                    <div className="w-16 h-16 bg-foreground/10 flex items-center justify-center rounded-md border border-white/20">
+                      <User className="w-8 h-8 text-foreground/40" />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-xl font-extrabold tracking-tight text-foreground leading-none">Yeqi Wang</h3>
+                        <span className="px-2 py-0.5 bg-primary text-white text-[9px] font-black uppercase tracking-widest rounded-sm">Expert</span>
                       </div>
+                      <p className="text-[11px] text-foreground/60 font-bold tracking-wide uppercase">A16z Alumni / Strategic Architect</p>
+                    </div>
+                  </div>
+
+                  {/* Key Stats Block */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-6 bg-foreground text-white rounded-md space-y-1">
+                      <div className="text-3xl font-black tracking-tighter italic">150+</div>
+                      <div className="text-[9px] font-mono font-black text-white/40 uppercase tracking-widest">Global Nodes</div>
+                    </div>
+                    <div className="p-6 bg-primary text-white rounded-md space-y-1">
+                      <div className="text-3xl font-black tracking-tighter italic">98.2%</div>
+                      <div className="text-[9px] font-mono font-black text-white/40 uppercase tracking-widest">Model Precision</div>
                     </div>
                   </div>
                 </div>

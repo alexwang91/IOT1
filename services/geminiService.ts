@@ -26,7 +26,6 @@ const cleanAndParseJSON = (text: string): any => {
 
 /**
  * Generates an exhaustive FWA strategy report using Gemini 3 Pro with Thinking Mode
- * followed by a Flash Expert Review.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
   const apiKey = process.env.API_KEY;
@@ -34,53 +33,52 @@ export const generateFWAReport = async (country: string, operator: string, langu
 
   const ai = new GoogleGenAI({ apiKey });
 
-  // STAGE 1: CORE STRATEGIC GENERATION (Thinking Mode)
+  const isChinese = language === Language.CHINESE;
+
   const corePrompt = `
-    Role: Senior Telecom Strategy Architect (Expert in 5G, FWA, and Spectral Economics).
-    Target: ${operator} in ${country} (Market Context: Focus on FWA vs Fiber, Spectrum n78/n77, ROI Modeling).
-    Language: ${language}
+    Role: Senior Telecom Strategy Architect & Lead Market Analyst (A16z/Strategy& Style).
+    Target: ${operator} in ${country} (Market Context: Focus on FWA deployment, 5G Spectral Strategy, ROI Analysis).
+    Language: ${language}. IMPORTANT: ALL content must be in ${language}. DO NOT include English translations in brackets.
 
-    TASK: Generate an exhaustive strategic blueprint for FWA deployment.
+    TASK: Generate an extremely detailed, high-density strategic blueprint for FWA.
     
-    SPECIFIC REQUIREMENTS:
-    1. Pain Points: Identify main frictions in the market (e.g. fiber penetration gaps, rural latency, high CAPEX).
-    2. Strategic Positioning: Is FWA a fiber complement or competitor? Define based on ${operator}'s portfolio.
-    3. Spectrum (CRITICAL): Detailed analysis of Romanian bands (3.5GHz/n78, 700MHz/n28, 26GHz/n258). Suggest strategies for refarming or sharing.
-    4. Technical evaluation of 20+ features: VoIP/VoLTE, TR-069/USP, EasyMesh, Wi-Fi 7, Slicing, Massive MIMO, etc.
-    5. GTM Strategy: Innovative pricing (周期性/无限量), OTT bundles (TV, Streaming), and channel mix.
-    6. Business Model: ROI Calculator parameters, implementation roadmap (milestones), and risk framework.
-    7. Global Case Studies: Reference similar markets (e.g., T-Mobile US, Optus Australia, or Vodafone UK).
+    CONTENT REQUIREMENTS (VERY IMPORTANT):
+    - Each "insight" must be a long, data-rich paragraph (at least 150-200 words).
+    - Every list (strengths, challenges, recommendations) must contain at least 5-7 items.
+    - Technical evaluation must be thorough: mention specific 3GPP releases, beamforming techniques, and spectral efficiency ratios.
+    - Spectrum Analysis: Research the latest 2024 spectrum holdings for ${operator} in ${country}.
+    - ROI Logic: Provide a breakdown of cost per bit, CPE subsidies, and churn reduction strategies.
 
-    JSON SCHEMA:
+    JSON SCHEMA (Strict adherence):
     {
       "operatorName": "${operator}",
       "country": "${country}",
-      "executiveSummary": "...",
-      "painPoints": [{ "title": "...", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
-      "strategicPositioning": [{ "title": "...", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
+      "executiveSummary": "A highly detailed, professional summary (300+ words) of the strategic outlook.",
+      "painPoints": [{ "title": "Section Title", "insight": "Extensive paragraph...", "strengths": ["Item 1", "Item 2", ...], "challenges": [...], "recommendations": [...] }],
+      "strategicPositioning": [{ "title": "Positioning Factor", "insight": "Extensive paragraph...", "strengths": [...], "challenges": [...], "recommendations": [...] }],
       "valueProposition": {
-        "consumer": { "title": "B2C", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] },
-        "enterprise": { "title": "B2B", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] },
-        "operator": { "title": "Internal", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }
+        "consumer": { "title": "B2C Strategy", "insight": "Detailed analysis...", "strengths": [...], "challenges": [...], "recommendations": [...] },
+        "enterprise": { "title": "B2B/SME Strategy", "insight": "Detailed analysis...", "strengths": [...], "challenges": [...], "recommendations": [...] },
+        "operator": { "title": "Internal/OpEx Efficiency", "insight": "Detailed analysis...", "strengths": [...], "challenges": [...], "recommendations": [...] }
       },
       "spectrumAnalysis": {
-        "overview": "...",
-        "bands": [{ "band": "n78", "technology": "5G NR", "coverage": 70, "capacity": 90, "status": "Allocated" }],
-        "detailedAnalysis": { "title": "Spectral Efficiency", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }
+        "overview": "Detailed spectral landscape overview...",
+        "bands": [{ "band": "n78 (3.5GHz)", "technology": "5G NR", "coverage": 85, "capacity": 95, "status": "Primary" }],
+        "detailedAnalysis": { "title": "Spectral Engineering", "insight": "...", "strengths": [...], "challenges": [...], "recommendations": [...] }
       },
       "technicalCapabilities": {
-        "items": [{ "feature": "Massive MIMO", "priority": "High", "description": "...", "relevanceScore": 95 }],
-        "detailedAnalysis": { "title": "Tech Stack", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }
+        "items": [{ "feature": "Massive MIMO (64T64R)", "priority": "High", "description": "Long technical explanation...", "relevanceScore": 98 }],
+        "detailedAnalysis": { "title": "Infrastructure Roadmap", "insight": "...", "strengths": [...], "challenges": [...], "recommendations": [...] }
       },
-      "networkPlanning": [{ "title": "Optimization", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
-      "commercialStrategy": [{ "title": "GTM", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }],
+      "networkPlanning": [{ "title": "Optimization Strategy", "insight": "...", "strengths": [...], "challenges": [...], "recommendations": [...] }],
+      "commercialStrategy": [{ "title": "GTM & Pricing Logic", "insight": "...", "strengths": [...], "challenges": [...], "recommendations": [...] }],
       "roiAnalysis": {
-        "summary": "...",
-        "assumptions": ["CAPEX...", "OPEX..."],
-        "detailedAnalysis": { "title": "Finance", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] },
-        "roiCalculatorLogic": "..."
+        "summary": "Long breakdown of financial viability...",
+        "assumptions": ["List 8-10 specific financial assumptions..."],
+        "detailedAnalysis": { "title": "Economic Modeling", "insight": "...", "strengths": [...], "challenges": [...], "recommendations": [...] },
+        "roiCalculatorLogic": "Detailed formulaic description of the yield calculation."
       },
-      "operations": [{ "title": "Ops Roadmap", "insight": "...", "strengths": [], "challenges": [], "recommendations": [] }]
+      "operations": [{ "title": "Roadmap 2025-2027", "insight": "...", "strengths": [...], "challenges": [...], "recommendations": [...] }]
     }
   `;
 
@@ -89,31 +87,29 @@ export const generateFWAReport = async (country: string, operator: string, langu
     contents: corePrompt,
     config: {
       thinkingConfig: { thinkingBudget: 32768 },
-      maxOutputTokens: 64000, // To allow room for the thinking + large JSON
+      maxOutputTokens: 64000,
       tools: [{ googleSearch: {} }],
       temperature: 0.1,
     }
   });
 
-  const coreReport = cleanAndParseJSON(coreResponse.text);
+  const coreReport = cleanAndParseJSON(coreResponse.text || "{}");
 
-  // STAGE 2: EXPERT CRITIQUE (Flash Expert - Silent Role)
-  // This model acts as a "cynical reviewer" to identify uncertainties.
+  // STAGE 2: EXPERT CRITIQUE
   const critiquePrompt = `
-    Role: Senior Telecom Audit Expert. 
-    Task: Critically review the following Strategic Report for ${operator} in ${country}.
-    Report Data: ${JSON.stringify(coreReport)}
+    Role: Cynical Telecom Auditor. Language: ${language}.
+    Task: Critically review this report for ${operator}.
+    Data: ${JSON.stringify(coreReport).substring(0, 15000)}
     
     INSTRUCTIONS:
-    1. For each section, provide a short "expertCritique" (max 3 sentences) highlighting what might be too optimistic or risky.
-    2. List "researchDirectives" for things requiring field testing or regulatory verification.
-    3. Provide a final "expertSummary" judging the feasibility of the overall plan (Cynical/Professional tone).
-    4. Connect to the internet if needed to verify 2024 Romanian spectrum news or Vodafone specific announcements.
-    
-    Output Format: ONLY JSON containing:
+    - Provide an "expertCritique" and "researchDirectives" for each core block.
+    - Everything must be in ${language}. No English.
+    - Be sharp, technical, and professional.
+
+    Output format: JSON ONLY.
     {
-      "critiques": [ { "sectionTitle": "...", "critique": "...", "directives": ["..."] } ],
-      "expertSummary": "..."
+      "critiques": [ { "sectionTitle": "Exact Section Title from Data", "critique": "...", "directives": ["..."] } ],
+      "expertSummary": "A final 200-word critical judgement."
     }
   `;
 
@@ -126,29 +122,33 @@ export const generateFWAReport = async (country: string, operator: string, langu
     }
   });
 
-  const critiqueData = JSON.parse(critiqueResponse.text);
+  const critiqueData = cleanAndParseJSON(critiqueResponse.text || "{}");
 
-  // STAGE 3: MERGE ANALYTICS
-  // Map critiques back to the core report
   const mergeCritique = (section: any, title: string) => {
-    const crit = critiqueData.critiques.find((c: any) => c.sectionTitle.includes(title) || title.includes(c.sectionTitle));
+    const crit = critiqueData.critiques?.find((c: any) => 
+      (c.sectionTitle && title.toLowerCase().includes(c.sectionTitle.toLowerCase())) || 
+      (c.sectionTitle && c.sectionTitle.toLowerCase().includes(title.toLowerCase()))
+    );
     if (crit && section) {
       section.expertCritique = crit.critique;
       section.researchDirectives = crit.directives;
     }
   };
 
-  coreReport.painPoints.forEach((p: any) => mergeCritique(p, p.title));
-  coreReport.strategicPositioning.forEach((p: any) => mergeCritique(p, p.title));
-  mergeCritique(coreReport.valueProposition.consumer, "B2C");
-  mergeCritique(coreReport.valueProposition.enterprise, "B2B");
-  mergeCritique(coreReport.valueProposition.operator, "Internal");
-  mergeCritique(coreReport.spectrumAnalysis.detailedAnalysis, "Spectral");
-  mergeCritique(coreReport.technicalCapabilities.detailedAnalysis, "Tech");
-  coreReport.networkPlanning.forEach((p: any) => mergeCritique(p, p.title));
-  coreReport.commercialStrategy.forEach((p: any) => mergeCritique(p, p.title));
-  mergeCritique(coreReport.roiAnalysis.detailedAnalysis, "Finance");
-  coreReport.operations.forEach((p: any) => mergeCritique(p, p.title));
+  // Merge back
+  if (coreReport.painPoints) coreReport.painPoints.forEach((p: any) => mergeCritique(p, p.title));
+  if (coreReport.strategicPositioning) coreReport.strategicPositioning.forEach((p: any) => mergeCritique(p, p.title));
+  if (coreReport.valueProposition) {
+    mergeCritique(coreReport.valueProposition.consumer, coreReport.valueProposition.consumer.title);
+    mergeCritique(coreReport.valueProposition.enterprise, coreReport.valueProposition.enterprise.title);
+    mergeCritique(coreReport.valueProposition.operator, coreReport.valueProposition.operator.title);
+  }
+  if (coreReport.spectrumAnalysis) mergeCritique(coreReport.spectrumAnalysis.detailedAnalysis, coreReport.spectrumAnalysis.detailedAnalysis.title);
+  if (coreReport.technicalCapabilities) mergeCritique(coreReport.technicalCapabilities.detailedAnalysis, coreReport.technicalCapabilities.detailedAnalysis.title);
+  if (coreReport.networkPlanning) coreReport.networkPlanning.forEach((p: any) => mergeCritique(p, p.title));
+  if (coreReport.commercialStrategy) coreReport.commercialStrategy.forEach((p: any) => mergeCritique(p, p.title));
+  if (coreReport.roiAnalysis) mergeCritique(coreReport.roiAnalysis.detailedAnalysis, coreReport.roiAnalysis.detailedAnalysis.title);
+  if (coreReport.operations) coreReport.operations.forEach((p: any) => mergeCritique(p, p.title));
   
   coreReport.expertSummary = critiqueData.expertSummary;
   coreReport.groundingChunks = coreResponse.candidates?.[0]?.groundingMetadata?.groundingChunks;
@@ -156,9 +156,6 @@ export const generateFWAReport = async (country: string, operator: string, langu
   return coreReport as FWAReport;
 };
 
-/**
- * Expert Chat functionality.
- */
 export const chatWithInsight = async (
   history: ChatMessage[], 
   newMessage: string, 
@@ -169,7 +166,7 @@ export const chatWithInsight = async (
   if (!apiKey) throw new Error("API Key missing.");
   const ai = new GoogleGenAI({ apiKey });
   
-  const systemContext = `Context: You are a Senior Telecom Consultant. Context: ${JSON.stringify(reportContext).substring(0, 20000)}. Language: ${language}. Use the thinking process for complex questions.`;
+  const systemContext = `Context: Senior Telecom Consultant. Data: ${JSON.stringify(reportContext).substring(0, 15000)}. Language: ${language}. Always answer in ${language}. Be technical.`;
 
   const chat = ai.chats.create({
     model: 'gemini-3-pro-preview',
