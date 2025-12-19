@@ -4,7 +4,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Zap, ArrowRight, Search } from 'lucide-react';
+import { MessageSquare, Zap, ArrowRight, Search, Globe, User } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -32,8 +32,8 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-background flex flex-col font-sans selection:bg-accent/10 selection:text-accent">
       <main className="flex-1 overflow-x-hidden flex flex-col items-center">
         {!report && !loading && !error ? (
-          <div className="max-w-7xl w-full px-6 py-12 lg:py-32 grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-16 lg:gap-24 items-start">
-            {/* Left Column: Welcome & Context */}
+          <div className="max-w-7xl w-full px-6 py-12 lg:py-32 grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-16 lg:gap-24 items-center">
+            {/* Left Column: Welcome & Branding */}
             <div className="space-y-12 animate-fade-in-up">
               <div className="space-y-8">
                 <div className="flex items-center gap-3">
@@ -48,39 +48,43 @@ const App: React.FC = () => {
                     Strategic <span className="gradient-text">Insights</span> for Operators.
                   </h1>
                   <p className="text-xl text-muted-foreground leading-relaxed max-w-xl font-medium">
-                    Analyze FWA strategy, spectrum analysis, and commercial planning with enterprise-grade market intelligence.
+                    Unlock deep-tier FWA strategy, spectrum valuation, and commercial roadmaps with real-time market grounding.
                   </p>
                 </div>
               </div>
 
-              {/* Distinct Author Card */}
-              <div className="inline-block p-6 rounded-2xl bg-white border border-border shadow-sm hover:shadow-md transition-shadow group">
-                <div className="flex items-center gap-4">
-                  <div className="w-2 h-10 bg-accent-gradient rounded-full" />
-                  <div>
-                    <h3 className="font-bold text-foreground">Yeqi Wang</h3>
-                    <p className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">A16z Alumni • Strategic Architect</p>
+              {/* Glass Author Card */}
+              <div className="inline-flex items-center gap-5 p-5 rounded-[2rem] bg-white/40 backdrop-blur-xl border border-white shadow-xl shadow-accent/5 group hover:shadow-accent/10 transition-all duration-500">
+                <div className="w-12 h-12 rounded-2xl bg-accent-gradient p-[1px]">
+                  <div className="w-full h-full rounded-[calc(1rem-1px)] bg-white flex items-center justify-center">
+                    <User className="w-5 h-5 text-accent" />
                   </div>
-                  <ArrowRight className="w-4 h-4 text-accent ml-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground text-sm leading-none mb-1">Yeqi Wang</h3>
+                  <p className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">A16z Alumni • Platform Architect</p>
+                </div>
+                <div className="ml-4 w-10 h-10 rounded-full border border-border flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-all">
+                  <ArrowRight className="w-4 h-4" />
                 </div>
               </div>
 
               <div className="flex items-center gap-12 pt-4">
                 <div className="space-y-1">
                   <div className="text-3xl font-display text-foreground">5G/FWA</div>
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest font-bold">Primary Focus</div>
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest font-bold">Strategic Focus</div>
                 </div>
                 <div className="w-px h-12 bg-border" />
                 <div className="space-y-1">
-                  <div className="text-3xl font-display text-foreground">GLOBAL</div>
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest font-bold">Market Depth</div>
+                  <div className="text-3xl font-display text-foreground">REAL-TIME</div>
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest font-bold">Search Grounding</div>
                 </div>
               </div>
             </div>
 
             {/* Right Column: Input Section */}
             <div className="animate-fade-in-up delay-100 lg:sticky lg:top-24">
-               <div className="bg-white p-8 lg:p-10 rounded-[2.5rem] border border-border shadow-2xl shadow-accent/5">
+               <div className="bg-white p-8 lg:p-12 rounded-[3rem] border border-border shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)]">
                  <InputSection onGenerate={handleGenerate} isLoading={loading} />
                </div>
             </div>
@@ -94,58 +98,58 @@ const App: React.FC = () => {
                    <Zap className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-accent animate-pulse" />
                  </div>
                  <div className="space-y-2">
-                   <h3 className="font-display text-3xl text-foreground">Analyzing Market Assets</h3>
-                   <p className="text-muted-foreground font-medium italic">Scanning spectrum allocations and competitor news...</p>
+                   <h3 className="font-display text-3xl text-foreground">Synthesizing Insight</h3>
+                   <p className="text-muted-foreground font-medium italic">Analyzing competitor spectrum holdings and market news...</p>
                  </div>
               </div>
             )}
 
             {error && (
-              <div className="max-w-xl mx-auto text-center space-y-8 p-12 bg-white rounded-3xl border border-border shadow-xl animate-fade-in-up">
+              <div className="max-w-xl mx-auto text-center space-y-8 p-12 bg-white rounded-[2.5rem] border border-border shadow-2xl animate-fade-in-up">
                 <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto text-rose-500">
                   <Zap className="w-8 h-8 rotate-180" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="font-display text-2xl">Analysis Interrupted</h3>
-                  <p className="text-muted-foreground">{error}</p>
+                  <p className="text-muted-foreground font-medium">{error}</p>
                 </div>
                 <button 
                   onClick={() => { setError(null); setReport(null); }}
-                  className="w-full py-4 bg-foreground text-white font-bold rounded-xl hover:bg-slate-800 transition-all active:scale-[0.98]"
+                  className="w-full py-4 bg-foreground text-white font-bold rounded-2xl hover:bg-slate-800 transition-all active:scale-[0.98]"
                 >
-                  Return to Dashboard
+                  Back to Dashboard
                 </button>
               </div>
             )}
 
             {report && !loading && (
               <div className="animate-fade-in-up">
-                <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b border-border">
+                <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 pb-10 border-b border-border">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-accent-gradient rounded-lg flex items-center justify-center shadow-lg">
                         <Zap className="text-white w-4 h-4" />
                       </div>
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent bg-accent/5 px-3 py-1 rounded-full">Strategic Insight</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent bg-accent/5 px-3 py-1 rounded-full">Strategic Brief</span>
                     </div>
-                    <h1 className="font-display text-5xl md:text-6xl text-foreground leading-none">
+                    <h1 className="font-display text-5xl md:text-7xl text-foreground leading-none">
                       {report.operatorName} <span className="text-muted-foreground/20 font-sans font-light mx-2">/</span> <span className="text-muted-foreground">{report.country}</span>
                     </h1>
                   </div>
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setIsChatOpen(true)}
-                      className="px-6 py-3 bg-accent text-white font-bold rounded-xl hover:shadow-xl hover:shadow-accent/30 transition-all active:scale-95 flex items-center gap-2"
+                      className="px-8 py-4 bg-accent text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-accent/30 transition-all active:scale-95 flex items-center gap-2"
                     >
                       <MessageSquare className="w-4 h-4" />
-                      AI Consultant
+                      Strategic AI
                     </button>
                     <button 
                       onClick={() => { setReport(null); setError(null); }}
-                      className="px-6 py-3 border border-border bg-white text-muted-foreground font-bold rounded-xl hover:text-foreground hover:bg-muted transition-all flex items-center gap-2"
+                      className="px-8 py-4 border border-border bg-white text-muted-foreground font-bold rounded-2xl hover:text-foreground hover:bg-muted transition-all flex items-center gap-2"
                     >
                       <Search className="w-4 h-4" />
-                      New Analysis
+                      Reset
                     </button>
                   </div>
                 </div>
@@ -160,7 +164,7 @@ const App: React.FC = () => {
       {report && (
         <div 
           className={`
-            fixed inset-y-0 right-0 z-[60] w-full md:w-[480px] transform transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+            fixed inset-y-0 right-0 z-[60] w-full md:w-[520px] transform transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
             ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}
           `}
         >
@@ -174,7 +178,7 @@ const App: React.FC = () => {
       
       {isChatOpen && (
         <div 
-          className="fixed inset-0 bg-foreground/10 backdrop-blur-md z-[55] transition-opacity duration-500" 
+          className="fixed inset-0 bg-foreground/20 backdrop-blur-sm z-[55] transition-opacity duration-500" 
           onClick={() => setIsChatOpen(false)}
         />
       )}

@@ -1,9 +1,8 @@
-
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
-// The hardcoded API Key as per user instruction
-const GLOBAL_API_KEY = "AIzaSyCyA8Z6GzGHbj1SU2Dw4P9urGMjBY0JlbE";
+// The hardcoded API Key
+const GLOBAL_API_KEY = process.env.API_KEY || "YOUR_API_KEY";
 
 /**
  * Robust JSON parser that handles common LLM issues like truncation, 
@@ -12,23 +11,19 @@ const GLOBAL_API_KEY = "AIzaSyCyA8Z6GzGHbj1SU2Dw4P9urGMjBY0JlbE";
 const cleanAndParseJSON = (text: string): FWAReport => {
   let cleaned = text.trim();
 
-  // Remove markdown formatting if present
   const codeBlockMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
   if (codeBlockMatch) {
     cleaned = codeBlockMatch[1];
   }
 
-  // Find boundaries of the JSON object
   const firstBrace = cleaned.indexOf('{');
   const lastBrace = cleaned.lastIndexOf('}');
   if (firstBrace !== -1 && lastBrace !== -1) {
     cleaned = cleaned.substring(firstBrace, lastBrace + 1);
   }
 
-  // Basic cleanup: remove trailing commas before closing symbols
   cleaned = cleaned.replace(/,\s*([\]}])/g, '$1');
 
-  // Attempt to fix common truncation issues by balancing braces
   const openBraces = (cleaned.match(/{/g) || []).length;
   const closeBraces = (cleaned.match(/}/g) || []).length;
   if (openBraces > closeBraces) {
@@ -58,44 +53,45 @@ export const generateFWAReport = async (country: string, operator: string, langu
   const ai = new GoogleGenAI({ apiKey: GLOBAL_API_KEY });
   
   const prompt = `
-    Task: Generate a professional FWA (Fixed Wireless Access) strategy insight report.
+    Task: Generate an extensive professional FWA (Fixed Wireless Access) strategy insight report.
     Operator: ${operator}
     Country: ${country}
     Language: ${language}
 
     Guidelines:
-    1. Use Google Search to find actual spectrum holdings (e.g., 700MHz, 2.6GHz, 3.5GHz), recent news, and market share for ${operator}.
-    2. Output strictly as a valid JSON object.
-    3. Ensure all strings are properly escaped.
+    1. Use Google Search to find actual spectrum holdings (e.g., 700MHz, 2.6GHz, 3.5GHz), specific 5G launch dates, and precise market share metrics for ${operator}.
+    2. THE INSIGHT FIELDS MUST BE VERBOSE. Provide 3-4 sentences of deep strategic analysis for every "insight" field.
+    3. THE STRENGTHS, CHALLENGES, AND RECOMMENDATIONS MUST BE DETAILED. Instead of one-word bullet points, provide full descriptive phrases (e.g., "Leveraging existing 2.6GHz mid-band assets for massive MIMO deployment" instead of just "Spectrum").
+    4. Output strictly as a valid JSON object.
 
     JSON Structure:
     {
       "operatorName": "${operator}",
       "country": "${country}",
-      "painPoints": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
-      "strategicPositioning": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "painPoints": [{ "title": "Market Saturation Analysis", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "strategicPositioning": [{ "title": "FWA vs Fiber Competitive Edge", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
       "valueProposition": {
-        "consumer": { "title": "Consumer", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "enterprise": { "title": "Enterprise", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "operator": { "title": "Internal", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "consumer": { "title": "Residential Value", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
+        "enterprise": { "title": "SME & Industrial FWA", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
+        "operator": { "title": "Internal Capex Efficiency", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
       "spectrumAnalysis": {
         "overview": "Summary of held spectrum.",
         "bands": [{ "band": "3.5GHz", "technology": "5G", "coverage": 80, "capacity": 90, "status": "Allocated" }],
-        "detailedAnalysis": { "title": "Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "detailedAnalysis": { "title": "Spectrum Portfolio Optimization", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
       "technicalCapabilities": {
         "items": [{ "feature": "...", "priority": "High", "description": "..." }],
-        "detailedAnalysis": { "title": "Roadmap", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "detailedAnalysis": { "title": "Network Modernization Roadmap", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
-      "networkPlanning": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
-      "commercialStrategy": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "networkPlanning": [{ "title": "Infrastructure Scalability", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "commercialStrategy": [{ "title": "Pricing & GTM Model", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
       "roiAnalysis": {
         "summary": "...",
         "assumptions": ["..."],
-        "detailedAnalysis": { "title": "ROI", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "detailedAnalysis": { "title": "5-Year ROI Forecast", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
-      "operations": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }]
+      "operations": [{ "title": "Service Reliability Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }]
     }
   `;
 
@@ -105,7 +101,7 @@ export const generateFWAReport = async (country: string, operator: string, langu
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        temperature: 0.2,
+        temperature: 0.1,
       }
     });
 
@@ -132,7 +128,7 @@ export const chatWithInsight = async (
   language: Language
 ): Promise<string> => {
   const ai = new GoogleGenAI({ apiKey: GLOBAL_API_KEY });
-  const systemContext = `You are an expert Telecom Strategic Consultant. Report Context for ${reportContext.operatorName} in ${reportContext.country}: ${JSON.stringify(reportContext).substring(0, 5000)}. Language: ${language}.`;
+  const systemContext = `You are a world-class Telecom Strategic Consultant. You have analyzed the FWA potential for ${reportContext.operatorName} in ${reportContext.country}. Respond based on the provided report context: ${JSON.stringify(reportContext).substring(0, 6000)}. Always be professional, data-driven, and forward-looking. Language: ${language}.`;
 
   const chat = ai.chats.create({
     model: 'gemini-3-pro-preview',
