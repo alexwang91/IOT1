@@ -5,7 +5,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Zap, Search, ShieldAlert, User, Quote, ArrowRight } from 'lucide-react';
+import { MessageSquare, Zap, Search, ShieldAlert, User, Globe2, Sparkles } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -31,75 +31,93 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFE] text-slate-900 font-sans selection:bg-accent/10 selection:text-accent">
+    <div className="min-h-screen bg-[#FAFAFB] text-slate-900 font-sans selection:bg-accent/10 selection:text-accent">
       <main className="flex-1">
         {!report && !loading && !error ? (
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-24 relative min-h-[90vh] flex flex-col justify-center">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-32 flex flex-col justify-center min-h-[95vh]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-start">
               
               {/* Left Column: Strategic Content */}
-              <div className="lg:col-span-7 space-y-10">
-                <div className="flex items-center gap-3 animate-fade-in-up">
-                  <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center shadow-xl shadow-slate-200">
-                    <Zap className="text-white w-5 h-5" />
+              <div className="lg:col-span-7 space-y-12">
+                <div className="flex items-center gap-4 animate-fade-in-up">
+                  <div className="w-10 h-10 bg-white border border-slate-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <Zap className="text-accent w-5 h-5" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-display text-xl tracking-tight leading-none">TelcoInsight</span>
-                    <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Intelligence Unit</span>
+                    <span className="font-display text-xl tracking-tight leading-none text-slate-800">TelcoInsight</span>
+                    <span className="text-[9px] font-mono font-medium text-slate-400 uppercase tracking-widest mt-1">Intelligence Unit</span>
                   </div>
                 </div>
 
-                <div className="space-y-6 animate-fade-in-up delay-75">
-                  <h1 className="text-5xl lg:text-8xl font-display leading-[0.9] tracking-tighter text-slate-900">
-                    Strategic <span className="text-accent italic">Alpha</span> for Carriers.
+                <div className="space-y-8 animate-fade-in-up delay-75">
+                  <h1 className="text-5xl lg:text-[5.5rem] font-display leading-[0.95] tracking-tight text-slate-900">
+                    Precision <span className="text-accent italic font-normal">Strategy</span> for Carriers.
                   </h1>
-                  <p className="text-slate-500 text-lg lg:text-xl max-w-xl font-medium leading-relaxed">
-                    Automated market grounding, spectral modeling, and investment roadmaps for the next generation of connectivity.
+                  <p className="text-slate-500 text-lg lg:text-xl max-w-xl font-normal leading-relaxed">
+                    Automated market grounding and spectral modeling engineered for the next generation of global connectivity.
                   </p>
                 </div>
                 
-                {/* Stats Row */}
-                <div className="pt-8 flex gap-10 lg:gap-16 animate-fade-in-up delay-100">
-                  <div className="space-y-1">
-                    <div className="text-3xl font-display text-slate-900">150+</div>
-                    <div className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400">Markets Synced</div>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-3xl font-display text-slate-900">98%</div>
-                    <div className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400">Signal Accuracy</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Console */}
-              <div className="lg:col-span-5 space-y-8 animate-fade-in-up delay-150">
-                <div className="bg-slate-900 p-8 lg:p-12 rounded-[2.5rem] shadow-2xl shadow-slate-200 relative overflow-hidden ring-1 ring-white/10">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-accent/20 blur-3xl -mr-16 -mt-16" />
-                  <div className="relative z-10 space-y-8">
+                {/* Stats & Author Row Combined */}
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-12 pt-8 animate-fade-in-up delay-100 border-t border-slate-100">
+                  {/* Performance Stats */}
+                  <div className="flex gap-12">
                     <div className="space-y-1">
-                      <h4 className="text-white font-display text-2xl tracking-tight">Strategy Console</h4>
-                      <p className="text-white/40 text-[10px] font-mono uppercase tracking-widest font-bold">Encrypted Analysis Session</p>
+                      <div className="text-3xl font-display text-slate-800 font-normal">150+</div>
+                      <div className="text-[9px] font-mono font-bold text-slate-300 uppercase tracking-widest">Global Markets</div>
                     </div>
-                    <InputSection onGenerate={handleGenerate} isLoading={loading} />
+                    <div className="space-y-1">
+                      <div className="text-3xl font-display text-slate-800 font-normal">98%</div>
+                      <div className="text-[9px] font-mono font-bold text-slate-300 uppercase tracking-widest">Precision</div>
+                    </div>
+                  </div>
+
+                  {/* Divider (Desktop Only) */}
+                  <div className="hidden md:block w-px h-12 bg-slate-100" />
+
+                  {/* Author Card */}
+                  <div className="flex items-center gap-4 group">
+                    <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 overflow-hidden ring-4 ring-white shadow-sm transition-transform group-hover:scale-105">
+                       <User className="w-6 h-6" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-display text-lg tracking-tight text-slate-700 font-normal">Yeqi Wang</h3>
+                        <span className="px-1.5 py-0.5 bg-accent/5 text-accent text-[8px] font-bold uppercase tracking-widest rounded-md border border-accent/10">A16z Alumni</span>
+                      </div>
+                      <p className="text-[10px] text-slate-400 font-medium tracking-wide">Principal Strategic Architect</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Author Card - Positioned Bottom Left (Large Screens) */}
-            <div className="mt-20 lg:absolute lg:bottom-0 lg:left-12 lg:mb-0 animate-fade-in-up delay-300">
-               <div className="bg-white border border-slate-100 p-6 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center gap-5 max-w-sm group hover:border-accent/20 transition-all duration-500">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
-                     <User className="w-7 h-7" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-display text-lg tracking-tight">Yeqi Wang</h3>
-                      <span className="px-1.5 py-0.5 bg-accent/5 text-accent text-[8px] font-black uppercase tracking-widest rounded border border-accent/10">A16z Alumni</span>
+              {/* Right Column: Refined Light Console */}
+              <div className="lg:col-span-5 animate-fade-in-up delay-150">
+                <div className="bg-white p-10 lg:p-14 rounded-[3rem] border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.03)] relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-accent/5 blur-3xl -mr-20 -mt-20 group-hover:bg-accent/10 transition-colors duration-700" />
+                  
+                  <div className="relative z-10 space-y-10">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-300">Analysis System Live</span>
+                      </div>
+                      <h4 className="text-slate-900 font-display text-3xl tracking-tight font-normal">Strategy Console</h4>
                     </div>
-                    <p className="text-[11px] text-slate-400 font-medium leading-tight">Lead Strategic Architect & Founder</p>
+                    
+                    <InputSection onGenerate={handleGenerate} isLoading={loading} />
+                    
+                    <div className="pt-6 border-t border-slate-50 flex items-center justify-between text-slate-300">
+                      <div className="flex items-center gap-2">
+                         <Globe2 className="w-3.5 h-3.5 opacity-50" />
+                         <span className="text-[9px] font-mono font-bold uppercase tracking-widest">Spectral Node: UK-01</span>
+                      </div>
+                      <Sparkles className="w-3.5 h-3.5 opacity-30" />
+                    </div>
                   </div>
-               </div>
+                </div>
+              </div>
+
             </div>
           </div>
         ) : (
@@ -107,30 +125,30 @@ const App: React.FC = () => {
             {loading && (
               <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-12 animate-fade-in-up">
                  <div className="relative">
-                   <div className="w-16 h-16 rounded-full border-t-2 border-accent animate-spin" />
+                   <div className="w-16 h-16 rounded-full border-t border-accent/20 border-t-accent animate-spin" />
                    <Search className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-accent animate-pulse" />
                  </div>
                  <div className="space-y-3">
-                   <h3 className="font-display text-2xl text-slate-900 tracking-tight">Synthesizing Market Signal</h3>
-                   <p className="text-slate-400 text-[11px] font-mono uppercase tracking-[0.4em] font-bold">Accessing Global Intelligence Nodes</p>
+                   <h3 className="font-display text-2xl text-slate-900 tracking-tight font-normal">Synthesizing Intelligence</h3>
+                   <p className="text-slate-300 text-[10px] font-mono uppercase tracking-[0.5em] font-bold">Connecting to Spectral Registry</p>
                  </div>
               </div>
             )}
 
             {error && (
               <div className="max-w-xl mx-auto text-center space-y-10 py-32 animate-fade-in-up">
-                <div className="w-16 h-16 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto text-rose-500 border border-rose-100">
-                  <ShieldAlert className="w-8 h-8" />
+                <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 border border-rose-100">
+                  <ShieldAlert className="w-7 h-7" />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-display text-3xl tracking-tight">Strategic Node Failure</h3>
-                  <div className="p-8 bg-slate-50 border border-slate-200 rounded-3xl text-sm text-slate-600 font-mono leading-relaxed break-words text-left shadow-inner">
+                  <h3 className="font-display text-3xl tracking-tight font-normal">Access Interrupted</h3>
+                  <div className="p-8 bg-slate-50/50 border border-slate-100 rounded-[2rem] text-sm text-slate-500 font-mono leading-relaxed break-words text-left">
                     {error}
                   </div>
                 </div>
                 <button 
                   onClick={() => { setError(null); setLoading(false); }}
-                  className="px-10 py-5 bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-slate-800 transition-all active:scale-95 shadow-xl shadow-slate-200"
+                  className="px-10 py-5 border border-slate-200 text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-all active:scale-95"
                 >
                   Return to Dashboard
                 </button>
@@ -139,27 +157,27 @@ const App: React.FC = () => {
 
             {report && !loading && (
               <div className="animate-fade-in-up">
-                <div className="mb-12 flex flex-col lg:flex-row lg:items-center justify-between gap-10 pb-10 border-b border-slate-100">
-                  <div className="space-y-3 text-center lg:text-left">
+                <div className="mb-16 flex flex-col lg:flex-row lg:items-center justify-between gap-10 pb-12 border-b border-slate-100">
+                  <div className="space-y-4 text-center lg:text-left">
                     <div className="flex items-center justify-center lg:justify-start gap-3">
-                      <div className="px-2.5 py-1 bg-accent/5 text-accent text-[9px] font-black uppercase tracking-[0.2em] rounded border border-accent/10">Strategic Brief 2025</div>
-                      <span className="font-mono text-[9px] font-black uppercase tracking-[0.3em] text-slate-300">Executive Preview</span>
+                      <div className="px-3 py-1 bg-accent/5 text-accent text-[9px] font-bold uppercase tracking-[0.2em] rounded-lg border border-accent/10">Market Analysis 2025</div>
+                      <span className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-slate-300">Operational Level: Executive</span>
                     </div>
-                    <h1 className="font-display text-4xl lg:text-6xl text-slate-900 tracking-tighter leading-none">
-                      {report.operatorName} <span className="text-slate-200 font-sans font-thin mx-1">/</span> <span className="text-slate-400 font-sans font-light">{report.country}</span>
+                    <h1 className="font-display text-4xl lg:text-7xl text-slate-900 tracking-tighter leading-none">
+                      {report.operatorName} <span className="text-slate-200 font-sans font-thin">/</span> <span className="text-slate-400 font-sans font-light">{report.country}</span>
                     </h1>
                   </div>
-                  <div className="flex flex-wrap items-center justify-center gap-3">
+                  <div className="flex flex-wrap items-center justify-center gap-4">
                     <button
                       onClick={() => setIsChatOpen(true)}
-                      className="px-7 py-4.5 bg-accent text-white font-bold rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/40 hover:-translate-y-1 transition-all flex items-center gap-3 text-xs uppercase tracking-widest"
+                      className="px-8 py-5 bg-accent text-white font-bold rounded-2xl shadow-xl shadow-accent/20 hover:shadow-accent/40 hover:-translate-y-1 transition-all flex items-center gap-3 text-[10px] uppercase tracking-[0.2em]"
                     >
                       <MessageSquare className="w-4 h-4" />
                       Consult Expert
                     </button>
                     <button 
                       onClick={() => { setReport(null); setError(null); }}
-                      className="px-7 py-4.5 border border-slate-200 bg-white text-slate-500 font-bold rounded-xl hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-3 text-xs uppercase tracking-widest"
+                      className="px-8 py-5 border border-slate-200 bg-white text-slate-500 font-bold rounded-2xl hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-3 text-[10px] uppercase tracking-[0.2em]"
                     >
                       <Search className="w-4 h-4" />
                       New Task
@@ -177,7 +195,7 @@ const App: React.FC = () => {
       {report && (
         <div 
           className={`
-            fixed inset-y-0 right-0 z-[60] w-full md:w-[500px] transform transition-transform duration-700 ease-[cubic-bezier(0.2,1,0.2,1)]
+            fixed inset-y-0 right-0 z-[60] w-full md:w-[500px] transform transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]
             ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}
           `}
         >
@@ -191,7 +209,7 @@ const App: React.FC = () => {
       
       {isChatOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/10 backdrop-blur-sm z-[55] transition-opacity duration-700" 
+          className="fixed inset-0 bg-slate-900/5 backdrop-blur-sm z-[55] transition-opacity duration-1000" 
           onClick={() => setIsChatOpen(false)}
         />
       )}
