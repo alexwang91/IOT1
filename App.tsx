@@ -5,7 +5,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Zap, Search, User, ShieldAlert, Layers, ShieldCheck } from 'lucide-react';
+import { MessageSquare, Zap, Search, ShieldAlert, Layers, ShieldCheck } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -24,7 +24,7 @@ const App: React.FC = () => {
       setReport(data);
     } catch (err: any) {
       console.error("Generation failed:", err);
-      setError(err.message || "Strategic analysis interrupted.");
+      setError(err.message || "An unexpected error occurred during strategic analysis.");
     } finally {
       setLoading(false);
     }
@@ -42,33 +42,32 @@ const App: React.FC = () => {
               </div>
               <span className="font-display text-lg tracking-tight font-medium">TelcoInsight</span>
               <span className="text-slate-200 mx-1">/</span>
-              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">A16z Alum Platform</span>
+              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">Enterprise Platform</span>
             </div>
 
             {/* Central Hero */}
             <div className="text-center space-y-6 mb-16 animate-fade-in-up delay-75">
               <h1 className="text-3xl lg:text-4xl font-display leading-[1.2] tracking-tight text-slate-900 max-w-lg mx-auto">
-                Strategic Intelligence for the <span className="text-accent italic">Future of Connectivity</span>
+                Next-Gen Strategic Intelligence <br/> for <span className="text-accent italic">Global Carriers</span>
               </h1>
               <p className="text-slate-400 text-base max-w-sm mx-auto font-medium leading-relaxed">
-                Empowering operators with precise spectral modeling, competitive grounding, and investment roadmaps.
+                Empowering decisions with 5G spectral modeling and commercial roadmaps powered by Gemini 3 Pro.
               </p>
             </div>
 
             {/* Focused Search UI */}
             <div className="w-full max-w-sm animate-fade-in-up delay-150">
-               <div className="bg-white p-10 rounded-2xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 blur-2xl -mr-12 -mt-12 group-hover:bg-accent/10 transition-colors" />
+               <div className="bg-white p-10 rounded-2xl border border-slate-100 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.03)] relative overflow-hidden">
                  <InputSection onGenerate={handleGenerate} isLoading={loading} />
                </div>
                
-               {/* Minimalist Footnote */}
+               {/* Minimalist Trust Badges */}
                <div className="mt-12 flex items-center justify-center gap-6 opacity-30 grayscale transition-all hover:grayscale-0 hover:opacity-50 duration-700">
                   <div className="flex items-center gap-2 text-[10px] font-mono font-black uppercase tracking-widest">
-                    <Layers className="w-3.5 h-3.5" /> Modeling
+                    <Layers className="w-3.5 h-3.5" /> FWA Modeling
                   </div>
                   <div className="flex items-center gap-2 text-[10px] font-mono font-black uppercase tracking-widest">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Verified
+                    <ShieldCheck className="w-3.5 h-3.5" /> High Performance
                   </div>
                </div>
             </div>
@@ -82,8 +81,8 @@ const App: React.FC = () => {
                    <Search className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-accent animate-pulse" />
                  </div>
                  <div className="space-y-3">
-                   <h3 className="font-display text-xl text-slate-700">Synthesizing Market Data</h3>
-                   <p className="text-slate-400 text-xs font-mono uppercase tracking-[0.3em]">Querying Spectral Registries</p>
+                   <h3 className="font-display text-xl text-slate-700">Synthesizing Carrier Strategy</h3>
+                   <p className="text-slate-400 text-xs font-mono uppercase tracking-[0.3em]">Connecting to Intelligence Nodes</p>
                  </div>
               </div>
             )}
@@ -94,8 +93,8 @@ const App: React.FC = () => {
                   <ShieldAlert className="w-6 h-6" />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-display text-xl">Operational Disruption</h3>
-                  <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500 font-mono leading-relaxed break-words text-left">
+                  <h3 className="font-display text-xl text-slate-900">Analysis Halted</h3>
+                  <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 font-mono leading-relaxed break-words text-left shadow-inner">
                     {error}
                   </div>
                 </div>
@@ -103,7 +102,7 @@ const App: React.FC = () => {
                   onClick={() => { setError(null); setLoading(false); }}
                   className="px-8 py-4 bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-lg hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-200"
                 >
-                  Return to Console
+                  Reset Dashbord
                 </button>
               </div>
             )}
@@ -114,10 +113,10 @@ const App: React.FC = () => {
                   <div className="space-y-3 text-center lg:text-left">
                     <div className="flex items-center justify-center lg:justify-start gap-2">
                       <Zap className="w-4 h-4 text-accent" />
-                      <span className="font-mono text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Consultancy Edition • 2025</span>
+                      <span className="font-mono text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Strategy Report • {report.country}</span>
                     </div>
                     <h1 className="font-display text-3xl md:text-5xl text-slate-900 tracking-tight leading-none">
-                      {report.operatorName} <span className="text-slate-200 font-sans font-thin mx-1">/</span> <span className="text-slate-400 font-sans font-light">{report.country}</span>
+                      {report.operatorName} <span className="text-slate-200 font-sans font-thin mx-1">/</span> <span className="text-slate-400 font-sans font-light">Blueprint</span>
                     </h1>
                   </div>
                   <div className="flex flex-wrap items-center justify-center gap-3">
@@ -126,7 +125,7 @@ const App: React.FC = () => {
                       className="px-6 py-4 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/20 hover:shadow-accent/40 hover:-translate-y-0.5 transition-all flex items-center gap-2 text-xs"
                     >
                       <MessageSquare className="w-4 h-4" />
-                      Strategic Chat
+                      Chat with Consultant
                     </button>
                     <button 
                       onClick={() => { setReport(null); setError(null); }}
