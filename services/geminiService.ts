@@ -2,100 +2,84 @@ import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
 /**
- * Robust JSON parser that handles common LLM issues like truncation, 
- * unescaped characters, and trailing commas.
+ * Robust JSON parser that handles LLM-specific issues.
  */
 const cleanAndParseJSON = (text: string): FWAReport => {
   let cleaned = text.trim();
-
   const codeBlockMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  if (codeBlockMatch) {
-    cleaned = codeBlockMatch[1];
-  }
-
+  if (codeBlockMatch) cleaned = codeBlockMatch[1];
+  
   const firstBrace = cleaned.indexOf('{');
   const lastBrace = cleaned.lastIndexOf('}');
   if (firstBrace !== -1 && lastBrace !== -1) {
     cleaned = cleaned.substring(firstBrace, lastBrace + 1);
   }
 
-  cleaned = cleaned.replace(/,\s*([\]}])/g, '$1');
-
-  const openBraces = (cleaned.match(/{/g) || []).length;
-  const closeBraces = (cleaned.match(/}/g) || []).length;
-  if (openBraces > closeBraces) {
-    cleaned += '}'.repeat(openBraces - closeBraces);
-  }
-
   try {
     return JSON.parse(cleaned) as FWAReport;
   } catch (error: any) {
-    console.error("JSON Parse Error. Data sample:", cleaned.substring(0, 100));
+    // Attempt fallback sanitization
     try {
-      const sanitized = cleaned
-        .replace(/\n/g, ' ')
-        .replace(/\r/g, ' ')
-        .replace(/\t/g, ' ');
+      const sanitized = cleaned.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ');
       return JSON.parse(sanitized) as FWAReport;
     } catch (finalError) {
-      throw new Error(`Failed to parse report data. The AI response was malformed. Error: ${error.message}`);
+      throw new Error(`Failed to parse AI response. Error: ${error.message}`);
     }
   }
 };
 
 /**
- * Generates an FWA strategy report using Gemini 3 Pro.
+ * Generates an exhaustive FWA strategy report.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
-  // Use strictly process.env.API_KEY as requested
+  // Always fetch fresh from process.env.API_KEY as per instructions
   const apiKey = process.env.API_KEY;
   
   if (!apiKey) {
-    throw new Error("Missing API Credentials. Please ensure the 'API_KEY' environment variable is correctly configured in your deployment settings.");
+    throw new Error("Missing API Key. Please verify that 'API_KEY' is set in your environment variables.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
   
   const prompt = `
-    Task: Generate an EXHAUSTIVE professional FWA (Fixed Wireless Access) strategy insight report.
-    Operator: ${operator}
-    Country: ${country}
+    Task: Generate a 10,000-word equivalent professional FWA (Fixed Wireless Access) Strategy Blueprint.
+    Target: ${operator} in ${country}
     Language: ${language}
 
-    CRITICAL QUALITY REQUIREMENTS:
-    1. EXTREME VERBOSITY FOR CARDS: For every single point in "strengths", "challenges", and "recommendations", you MUST write a detailed paragraph of at least 4 sentences (at least 80 words per bullet point). 
-    2. DEEP INSIGHTS: Every "insight" field must be a 500-word mini-essay providing technical and market analysis.
-    3. REAL-WORLD DATA: Use Google Search to find actual spectrum holdings, precise 5G coverage %, latest subscriber numbers from 2024/2025 financial reports, and specific competitor names.
-    4. TECHNICAL SPECIFICITY: Discuss specific hardware, Massive MIMO configurations, and backhaul solutions relevant to ${operator}.
+    MANDATORY DEPTH:
+    1. Populate EVERY section defined in the JSON structure.
+    2. Bullet points must be paragraphs (min 4 sentences each).
+    3. Insights must be technical and market-specific, referencing 2024/2025 trends.
+    4. Use Google Search to find real spectrum holdings and coverage stats.
 
-    JSON Structure:
+    JSON Structure to follow:
     {
       "operatorName": "${operator}",
       "country": "${country}",
-      "painPoints": [{ 
-        "title": "Comprehensive Market Barriers & Growth Constraints", 
-        "insight": "Extensive 500-word analysis...", 
-        "strengths": ["Detailed 4-sentence paragraph...", "Another detailed paragraph..."], 
-        "challenges": ["Detailed 4-sentence paragraph...", "Detailed 4-sentence paragraph..."], 
-        "recommendations": ["Detailed 4-sentence paragraph...", "Detailed 4-sentence paragraph..."]
-      }],
-      "strategicPositioning": [{ "title": "Strategic FWA vs Fiber Competitive Landscape", "insight": "Full strategic essay...", "strengths": ["Detailed paragraph..."], "challenges": ["Detailed paragraph..."], "recommendations": ["Detailed paragraph..."] }],
+      "painPoints": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "strategicPositioning": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
       "valueProposition": {
-        "consumer": { "title": "B2C Value Architecture", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "enterprise": { "title": "B2B & Industrial Wireless Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "operator": { "title": "OPEX Optimization & Spectral Efficiency", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "consumer": { "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
+        "enterprise": { "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
+        "operator": { "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
       "spectrumAnalysis": {
-        "overview": "Extensive summary of digital assets.",
-        "bands": [{ "band": "3.5GHz", "technology": "5G NR SA", "coverage": 85, "capacity": 95, "status": "Primary Deployment Band" }],
-        "detailedAnalysis": { "title": "Spectral Valuation & Asset Optimization", "insight": "Deep analysis...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "overview": "...",
+        "bands": [{ "band": "3.5GHz", "technology": "5G NR", "coverage": 80, "capacity": 90, "status": "Primary" }],
+        "detailedAnalysis": { "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
+      "technicalCapabilities": {
+        "items": [{ "feature": "Massive MIMO", "priority": "High", "description": "..." }],
+        "detailedAnalysis": { "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+      },
+      "networkPlanning": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "commercialStrategy": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
       "roiAnalysis": {
-        "summary": "Exhaustive financial summary with EBITDA impact.",
-        "assumptions": ["List 10 specific financial and technical assumptions..."],
-        "detailedAnalysis": { "title": "5-Year ROI & Yield Projection", "insight": "Full financial model breakdown...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "summary": "...",
+        "assumptions": ["Assumption 1...", "Assumption 2..."],
+        "detailedAnalysis": { "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
-      "commercialStrategy": [{ "title": "Omnichannel GTM & Pricing Evolution", "insight": "Commercial strategy analysis...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }]
+      "operations": [{ "title": "...", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }]
     }
   `;
 
@@ -110,7 +94,7 @@ export const generateFWAReport = async (country: string, operator: string, langu
     });
 
     const text = response.text;
-    if (!text) throw new Error("Empty response from Gemini API.");
+    if (!text) throw new Error("Empty AI response.");
 
     const report = cleanAndParseJSON(text);
     report.groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
@@ -122,9 +106,6 @@ export const generateFWAReport = async (country: string, operator: string, langu
   }
 };
 
-/**
- * Expert Chat powered by Gemini 3 Pro.
- */
 export const chatWithInsight = async (
   history: ChatMessage[], 
   newMessage: string, 
@@ -133,9 +114,9 @@ export const chatWithInsight = async (
 ): Promise<string> => {
   const apiKey = process.env.API_KEY;
   if (!apiKey) throw new Error("API Key configuration error.");
-  
   const ai = new GoogleGenAI({ apiKey });
-  const systemContext = `You are a world-class Telecom Strategic Consultant. You have analyzed ${reportContext.operatorName} in ${reportContext.country}. Respond with extreme technical and financial depth. Use this context: ${JSON.stringify(reportContext).substring(0, 10000)}. Language: ${language}.`;
+  
+  const systemContext = `Consultant role. Market: ${reportContext.country}, Operator: ${reportContext.operatorName}. Use context: ${JSON.stringify(reportContext).substring(0, 15000)}. Language: ${language}.`;
 
   const chat = ai.chats.create({
     model: 'gemini-3-pro-preview',
@@ -147,5 +128,5 @@ export const chatWithInsight = async (
   });
 
   const response = await chat.sendMessage({ message: newMessage });
-  return response.text || "I'm sorry, I couldn't generate a response.";
+  return response.text || "No response generated.";
 };
