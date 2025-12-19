@@ -1,9 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { FWAReport, Language, ChatMessage } from "../types";
 
-// The hardcoded API Key
-const GLOBAL_API_KEY = process.env.API_KEY || "YOUR_API_KEY";
-
 /**
  * Robust JSON parser that handles common LLM issues like truncation, 
  * unescaped characters, and trailing commas.
@@ -50,48 +47,48 @@ const cleanAndParseJSON = (text: string): FWAReport => {
  * Generates an FWA strategy report using Gemini 3 Pro.
  */
 export const generateFWAReport = async (country: string, operator: string, language: Language): Promise<FWAReport> => {
-  const ai = new GoogleGenAI({ apiKey: GLOBAL_API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const prompt = `
-    Task: Generate an extensive professional FWA (Fixed Wireless Access) strategy insight report.
+    Task: Generate an EXTREMELY DETAILED and EXTENSIVE professional FWA (Fixed Wireless Access) strategy insight report.
     Operator: ${operator}
     Country: ${country}
     Language: ${language}
 
-    Guidelines:
-    1. Use Google Search to find actual spectrum holdings (e.g., 700MHz, 2.6GHz, 3.5GHz), specific 5G launch dates, and precise market share metrics for ${operator}.
-    2. THE INSIGHT FIELDS MUST BE VERBOSE. Provide 3-4 sentences of deep strategic analysis for every "insight" field.
-    3. THE STRENGTHS, CHALLENGES, AND RECOMMENDATIONS MUST BE DETAILED. Instead of one-word bullet points, provide full descriptive phrases (e.g., "Leveraging existing 2.6GHz mid-band assets for massive MIMO deployment" instead of just "Spectrum").
-    4. Output strictly as a valid JSON object.
+    CRITICAL QUALITY REQUIREMENTS:
+    1. EXHAUSTIVE DETAIL: Every "insight" field must contain at least 200-300 words of professional consulting-grade analysis. Avoid generic statements; focus on specific local market conditions, ${operator}'s actual financial standing, and technical debt.
+    2. VERBOSE CARDS: For "strengths", "challenges", and "recommendations", do not use simple bullet points. Use 2-3 detailed sentences for each item. I want the UI cards to be full of high-value information.
+    3. REAL-TIME GROUNDING: Use Google Search to find actual spectrum holdings (e.g., specific MHz in 700MHz, 2.6GHz, 3.5GHz, 26GHz bands), specific 5G commercial launch dates, and the most recent quarterly subscriber metrics for ${operator}.
+    4. TECHNICAL SPECIFICITY: Mention specific technologies like Massive MIMO (64T64R), Beamforming, Network Slicing for FWA, and CPE (Customer Premises Equipment) evolution.
+
+    Output strictly as a valid JSON object.
 
     JSON Structure:
     {
       "operatorName": "${operator}",
       "country": "${country}",
-      "painPoints": [{ "title": "Market Saturation Analysis", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
-      "strategicPositioning": [{ "title": "FWA vs Fiber Competitive Edge", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "painPoints": [{ "title": "Market Saturation & Growth Constraints", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
+      "strategicPositioning": [{ "title": "Competitive FWA vs Fiber Advantage", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
       "valueProposition": {
-        "consumer": { "title": "Residential Value", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "enterprise": { "title": "SME & Industrial FWA", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
-        "operator": { "title": "Internal Capex Efficiency", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "consumer": { "title": "Mass-Market Residential Connectivity", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
+        "enterprise": { "title": "B2B & Industrial Wireless Solutions", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] },
+        "operator": { "title": "Network Monetization & Capex Efficiency", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
       "spectrumAnalysis": {
-        "overview": "Summary of held spectrum.",
-        "bands": [{ "band": "3.5GHz", "technology": "5G", "coverage": 80, "capacity": 90, "status": "Allocated" }],
-        "detailedAnalysis": { "title": "Spectrum Portfolio Optimization", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "overview": "Exhaustive summary of the total spectrum portfolio including recent auction wins.",
+        "bands": [{ "band": "3.5GHz", "technology": "5G NR", "coverage": 80, "capacity": 95, "status": "In Use / Expanding" }],
+        "detailedAnalysis": { "title": "Spectrum Portfolio Optimization Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
       "technicalCapabilities": {
-        "items": [{ "feature": "...", "priority": "High", "description": "..." }],
-        "detailedAnalysis": { "title": "Network Modernization Roadmap", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "items": [{ "feature": "...", "priority": "High", "description": "Full technical description..." }],
+        "detailedAnalysis": { "title": "Architecture & Engineering Roadmap", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
-      "networkPlanning": [{ "title": "Infrastructure Scalability", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
-      "commercialStrategy": [{ "title": "Pricing & GTM Model", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }],
       "roiAnalysis": {
-        "summary": "...",
-        "assumptions": ["..."],
-        "detailedAnalysis": { "title": "5-Year ROI Forecast", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
+        "summary": "Deep dive into EBITDA impact and payback period modeling.",
+        "assumptions": ["List 5+ detailed assumptions"],
+        "detailedAnalysis": { "title": "5-Year ROI & Yield Analysis", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }
       },
-      "operations": [{ "title": "Service Reliability Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }]
+      "commercialStrategy": [{ "title": "GTM & Channel Partner Strategy", "insight": "...", "strengths": ["..."], "challenges": ["..."], "recommendations": ["..."] }]
     }
   `;
 
@@ -101,7 +98,7 @@ export const generateFWAReport = async (country: string, operator: string, langu
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        temperature: 0.1,
+        temperature: 0.2,
       }
     });
 
@@ -114,6 +111,9 @@ export const generateFWAReport = async (country: string, operator: string, langu
     return report;
   } catch (error: any) {
     console.error("FWA Generation Error:", error);
+    if (error.message?.includes('API key not valid')) {
+      throw new Error("Authentication failed: The provided API key is invalid. Please ensure your environment is configured correctly.");
+    }
     throw error;
   }
 };
@@ -127,8 +127,8 @@ export const chatWithInsight = async (
   reportContext: FWAReport, 
   language: Language
 ): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: GLOBAL_API_KEY });
-  const systemContext = `You are a world-class Telecom Strategic Consultant. You have analyzed the FWA potential for ${reportContext.operatorName} in ${reportContext.country}. Respond based on the provided report context: ${JSON.stringify(reportContext).substring(0, 6000)}. Always be professional, data-driven, and forward-looking. Language: ${language}.`;
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const systemContext = `You are an elite Telecom Strategic Consultant. You have analyzed the FWA potential for ${reportContext.operatorName} in ${reportContext.country}. Respond with extreme professional depth. Use the provided report context: ${JSON.stringify(reportContext).substring(0, 8000)}. Language: ${language}.`;
 
   const chat = ai.chats.create({
     model: 'gemini-3-pro-preview',
