@@ -5,7 +5,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Zap, Search, ShieldAlert, User, Sparkles } from 'lucide-react';
+import { MessageSquare, Search, ShieldAlert, User, Network, BarChart3, Globe2 } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -35,76 +35,85 @@ const App: React.FC = () => {
       <main className="flex-1">
         {!report && !loading && !error ? (
           <div className="relative overflow-hidden min-h-screen flex flex-col justify-center">
-            {/* Background Decoration - More vibrant for frosted glass visibility */}
-            <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-accent/10 -translate-x-1/2 translate-y-1/4 rotate-45 blur-3xl" />
+            {/* Background Decoration */}
+            <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-secondary/5 -translate-x-1/2 translate-y-1/4 rotate-45 blur-3xl" />
 
             <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full relative z-10 py-12 lg:py-20">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
                 
-                {/* Left Column: Welcome & Strategic Content */}
-                <div className="lg:col-span-7 space-y-10 lg:pr-10">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-md">
-                      <Zap className="text-white w-5 h-5" />
+                {/* Left Column: Logo, Headlines, Author & Stats */}
+                <div className="lg:col-span-7 space-y-12">
+                  <div className="flex items-center gap-4 group">
+                    <div className="w-12 h-12 bg-foreground flex items-center justify-center rounded-none transform transition-transform group-hover:rotate-90 duration-500">
+                      <Network className="text-white w-6 h-6" />
                     </div>
-                    <span className="font-black text-xl tracking-tight leading-none text-foreground uppercase italic">TelcoInsight</span>
+                    <div className="flex flex-col">
+                      <span className="font-serif text-2xl tracking-tighter leading-none text-foreground uppercase italic">StratNode</span>
+                      <span className="text-[8px] font-mono font-bold uppercase tracking-[0.4em] text-foreground/30">Intelligence Systems</span>
+                    </div>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <span className="text-primary font-black uppercase tracking-[0.4em] text-xs">Strategic Intelligence Dashboard</span>
-                      <h1 className="text-5xl lg:text-7xl font-extrabold leading-[1] tracking-tighter text-foreground">
-                        ENGINEERING <br/>
-                        <span className="text-primary">FWA EXCELLENCE.</span>
+                  <div className="space-y-8">
+                    <div className="space-y-4">
+                      <span className="text-primary font-mono font-bold uppercase tracking-[0.4em] text-[10px]">Project_FWA_Genesis</span>
+                      <h1 className="text-6xl lg:text-8xl font-serif leading-[0.9] tracking-tighter text-foreground">
+                        DEFINING THE <br/>
+                        <span className="text-primary italic">EDGE LOGIC.</span>
                       </h1>
                     </div>
-                    <p className="text-foreground/60 text-lg lg:text-xl max-w-xl font-medium leading-relaxed">
-                      Deploy grounded spectral modeling and commercial roadmaps. We provide the logic required for the next generation of fixed wireless deployment.
+                    <p className="text-foreground/60 text-lg lg:text-xl max-w-xl font-medium leading-relaxed tracking-tight">
+                      Architecting spectral deployment roadmaps with high-fidelity grounding. We provide the strategic logic required for global FWA excellence.
                     </p>
+                  </div>
+
+                  {/* Relocated Author & Stats Grid */}
+                  <div className="space-y-6 pt-4 max-w-xl">
+                    <div className="bg-white/40 backdrop-blur-xl border border-foreground/5 p-6 flex items-center gap-6 group">
+                      <div className="w-14 h-14 bg-foreground/5 flex items-center justify-center rounded-none border border-foreground/5 group-hover:bg-foreground group-hover:text-white transition-all duration-300">
+                        <User className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-lg font-serif tracking-tight text-foreground leading-none">Yeqi Wang</h3>
+                          <span className="px-2 py-0.5 bg-primary text-white text-[8px] font-bold uppercase tracking-widest">Expert</span>
+                        </div>
+                        <p className="text-[10px] text-foreground/40 font-bold tracking-wide uppercase">A16z Alumni / Strategic Architect</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="p-6 bg-foreground text-white flex flex-col justify-between h-32 group hover:bg-primary transition-colors duration-500">
+                        <div className="flex justify-between items-start">
+                          <Globe2 className="w-5 h-5 opacity-30 group-hover:opacity-100 transition-opacity" />
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40">Global Nodes</span>
+                        </div>
+                        <div className="text-4xl font-serif italic tracking-tighter leading-none">150+</div>
+                      </div>
+                      <div className="p-6 bg-muted text-foreground flex flex-col justify-between h-32 group border-b-4 border-primary">
+                        <div className="flex justify-between items-start">
+                          <BarChart3 className="w-5 h-5 opacity-30 group-hover:text-primary transition-opacity" />
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-foreground/30">Precision</span>
+                        </div>
+                        <div className="text-4xl font-serif italic tracking-tighter leading-none">98.2%</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Right Column: Console, Author & Stats */}
-                <div className="lg:col-span-5 space-y-8">
-                  {/* Deployment Console */}
-                  <div className="bg-muted p-10 rounded-lg border-l-[10px] border-primary">
-                    <div className="space-y-6">
-                      <div className="flex items-center justify-between">
-                         <h4 className="text-foreground text-2xl font-extrabold tracking-tight uppercase italic">Analyzer</h4>
-                         <div className="flex items-center gap-2">
+                {/* Right Column: Console Only */}
+                <div className="lg:col-span-5 sticky top-12">
+                  <div className="bg-muted p-10 border-l-[12px] border-primary">
+                    <div className="space-y-8">
+                      <div className="flex items-center justify-between border-b border-foreground/5 pb-6">
+                         <h4 className="text-foreground text-3xl font-serif tracking-tighter italic leading-none">Analyzer</h4>
+                         <div className="flex items-center gap-3">
                            <div className="w-2 h-2 bg-secondary animate-pulse" />
-                           <span className="text-[9px] font-mono font-black uppercase tracking-widest text-foreground/30">System Ready</span>
+                           <span className="text-[9px] font-mono font-bold uppercase tracking-[0.3em] text-foreground/30">Registry_Ready</span>
                          </div>
                       </div>
                       
                       <InputSection onGenerate={handleGenerate} isLoading={loading} />
-                    </div>
-                  </div>
-
-                  {/* Author Card - Frosted Glass Effect */}
-                  <div className="bg-white/40 backdrop-blur-xl border border-white/40 p-8 rounded-lg flex items-center gap-6">
-                    <div className="w-16 h-16 bg-foreground/10 flex items-center justify-center rounded-md border border-white/20">
-                      <User className="w-8 h-8 text-foreground/40" />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-xl font-extrabold tracking-tight text-foreground leading-none">Yeqi Wang</h3>
-                        <span className="px-2 py-0.5 bg-primary text-white text-[9px] font-black uppercase tracking-widest rounded-sm">Expert</span>
-                      </div>
-                      <p className="text-[11px] text-foreground/60 font-bold tracking-wide uppercase">A16z Alumni / Strategic Architect</p>
-                    </div>
-                  </div>
-
-                  {/* Key Stats Block */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-6 bg-foreground text-white rounded-md space-y-1">
-                      <div className="text-3xl font-black tracking-tighter italic">150+</div>
-                      <div className="text-[9px] font-mono font-black text-white/40 uppercase tracking-widest">Global Nodes</div>
-                    </div>
-                    <div className="p-6 bg-primary text-white rounded-md space-y-1">
-                      <div className="text-3xl font-black tracking-tighter italic">98.2%</div>
-                      <div className="text-[9px] font-mono font-black text-white/40 uppercase tracking-widest">Model Precision</div>
                     </div>
                   </div>
                 </div>
@@ -116,14 +125,14 @@ const App: React.FC = () => {
           <div className="w-full">
             {loading && (
               <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-12">
-                 <div className="w-24 h-24 bg-primary text-white flex items-center justify-center rounded-lg animate-pulse">
-                   <Search className="w-10 h-10" />
+                 <div className="w-24 h-24 bg-foreground text-white flex items-center justify-center rounded-none animate-pulse">
+                   <Network className="w-10 h-10" />
                  </div>
                  <div className="space-y-4">
-                   <h3 className="text-5xl font-extrabold text-foreground tracking-tighter">Synthesizing Market Logic...</h3>
-                   <div className="flex items-center justify-center gap-2">
-                      <div className="h-1 w-12 bg-primary" />
-                      <p className="text-foreground font-mono text-[11px] uppercase tracking-[0.5em] font-black">Connecting Registry</p>
+                   <h3 className="text-5xl font-serif text-foreground tracking-tighter italic">Synthesizing Logic...</h3>
+                   <div className="flex items-center justify-center gap-3">
+                      <div className="h-0.5 w-12 bg-primary" />
+                      <p className="text-foreground font-mono text-[10px] uppercase tracking-[0.5em] font-bold">L4_Access_Protocol</p>
                    </div>
                  </div>
               </div>
@@ -131,53 +140,54 @@ const App: React.FC = () => {
 
             {error && (
               <div className="max-w-2xl mx-auto text-center space-y-12 py-32 px-6">
-                <div className="w-20 h-20 bg-accent text-white flex items-center justify-center mx-auto rounded-md">
+                <div className="w-20 h-20 bg-accent text-white flex items-center justify-center mx-auto rounded-none">
                   <ShieldAlert className="w-10 h-10" />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-5xl font-extrabold tracking-tighter">Access Refused.</h3>
-                  <div className="p-10 bg-muted text-lg text-foreground font-mono leading-tight break-words text-left border-l-[12px] border-accent">
+                  <h3 className="text-5xl font-serif tracking-tighter italic">Access Refused.</h3>
+                  <div className="p-10 bg-muted text-lg text-foreground font-mono leading-tight break-words text-left border-l-[12px] border-accent uppercase tracking-tight">
                     {error}
                   </div>
                 </div>
                 <button 
                   onClick={() => { setError(null); setLoading(false); }}
-                  className="w-full py-6 bg-foreground text-white text-[12px] font-black uppercase tracking-[0.3em] rounded-md hover:bg-primary transition-all hover:scale-105"
+                  className="w-full py-6 bg-foreground text-white text-[12px] font-bold uppercase tracking-[0.4em] rounded-none hover:bg-primary transition-all duration-500"
                 >
-                  Return to Base
+                  Terminate & Reset
                 </button>
               </div>
             )}
 
             {report && !loading && (
               <div className="bg-background">
-                {/* Header Section with Bold Block */}
-                <div className="bg-foreground text-white py-24 px-8 lg:px-12 mb-20">
-                  <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-12">
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-4">
-                        <div className="px-3 py-1 bg-primary text-white text-[10px] font-black uppercase tracking-[0.3em] rounded">STRAT_BRIEF v25.1</div>
-                        <span className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-white/30 italic">L4 Executive Auth</span>
+                {/* Header Section */}
+                <div className="bg-foreground text-white py-32 px-8 lg:px-12 mb-20 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-full h-full bg-primary/5 opacity-50 blur-[120px]" />
+                  <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-16 relative z-10">
+                    <div className="space-y-10">
+                      <div className="flex items-center gap-6">
+                        <div className="px-4 py-1.5 bg-primary text-white text-[10px] font-bold uppercase tracking-[0.4em]">SYSTEM_OUTPUT_v25.2</div>
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.5em] text-white/30 italic">High_Density_Profile</span>
                       </div>
-                      <h1 className="text-7xl lg:text-[7.5rem] font-extrabold tracking-tighter leading-[0.85]">
-                        {report.operatorName.toUpperCase()} <br/>
-                        <span className="text-primary">{report.country.toUpperCase()}</span>
+                      <h1 className="text-7xl lg:text-9xl font-serif tracking-tighter leading-[0.8] uppercase italic">
+                        {report.operatorName} <br/>
+                        <span className="text-primary not-italic">{report.country}</span>
                       </h1>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-stretch gap-4">
+                    <div className="flex flex-col sm:flex-row items-stretch gap-6">
                       <button
                         onClick={() => setIsChatOpen(true)}
-                        className="px-10 h-16 bg-primary text-white font-black rounded-md hover:scale-105 transition-all flex items-center justify-center gap-4 text-[11px] uppercase tracking-[0.3em]"
+                        className="px-12 h-20 bg-primary text-white font-bold rounded-none hover:scale-105 transition-all flex items-center justify-center gap-6 text-[12px] uppercase tracking-[0.4em]"
                       >
-                        <MessageSquare className="w-5 h-5" />
+                        <MessageSquare className="w-6 h-6" />
                         Consult Expert
                       </button>
                       <button 
                         onClick={() => { setReport(null); setError(null); }}
-                        className="px-10 h-16 bg-white text-foreground font-black rounded-md hover:scale-105 transition-all flex items-center justify-center gap-4 text-[11px] uppercase tracking-[0.3em]"
+                        className="px-12 h-20 bg-white text-foreground font-bold rounded-none hover:scale-105 transition-all flex items-center justify-center gap-6 text-[12px] uppercase tracking-[0.4em]"
                       >
-                        <Search className="w-5 h-5" />
-                        New Analysis
+                        <Search className="w-6 h-6" />
+                        Reset Model
                       </button>
                     </div>
                   </div>
@@ -192,11 +202,11 @@ const App: React.FC = () => {
         )}
       </main>
 
-      {/* Chat UI Overlay - Flat Slide-out */}
+      {/* Chat UI Overlay */}
       {report && (
         <div 
           className={`
-            fixed inset-y-0 right-0 z-[60] w-full md:w-[500px] transform transition-transform duration-500 ease-in-out border-l-[8px] border-primary
+            fixed inset-y-0 right-0 z-[60] w-full md:w-[550px] transform transition-transform duration-700 ease-in-out border-l-[12px] border-primary
             ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}
           `}
         >
@@ -210,7 +220,7 @@ const App: React.FC = () => {
       
       {isChatOpen && (
         <div 
-          className="fixed inset-0 bg-foreground/20 z-[55]" 
+          className="fixed inset-0 bg-foreground/40 backdrop-blur-sm z-[55]" 
           onClick={() => setIsChatOpen(false)}
         />
       )}
