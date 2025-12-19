@@ -49,15 +49,16 @@ const SpectrumChart: React.FC<SpectrumChartProps> = ({ data }) => {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30, left: 0, bottom: 60 }}
+          margin={{ top: 20, right: 30, left: 10, bottom: 80 }}
         >
           <CartesianGrid strokeDasharray="0 0" vertical={false} stroke="#E5E7EB" strokeWidth={1} />
           <XAxis 
             dataKey="band" 
             axisLine={false} 
             tickLine={false} 
+            height={70}
             tick={{ fill: '#111827', fontSize: 11, fontWeight: 700, fontFamily: 'Inter', textAnchor: 'middle' }}
-            dy={25}
+            dy={35}
             interval={0}
           />
           <YAxis 

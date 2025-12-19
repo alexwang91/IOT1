@@ -5,7 +5,7 @@ import ReportView from './components/ReportView';
 import ChatInterface from './components/ChatInterface';
 import { generateFWAReport } from './services/geminiService';
 import { FWAReport, Language } from './types';
-import { MessageSquare, Search, ShieldAlert, User, Network, BarChart3, Globe2 } from 'lucide-react';
+import { MessageSquare, Search, ShieldAlert, User, Radio, BarChart3, Globe2, Activity } from 'lucide-react';
 
 const App: React.FC = () => {
   const [report, setReport] = useState<FWAReport | null>(null);
@@ -44,30 +44,30 @@ const App: React.FC = () => {
                 
                 {/* Left Column: Logo, Headlines, Author & Stats */}
                 <div className="lg:col-span-7 space-y-12">
-                  <div className="flex items-center gap-4 group">
-                    <div className="w-12 h-12 bg-foreground flex items-center justify-center rounded-none transform transition-transform group-hover:rotate-90 duration-500">
-                      <Network className="text-white w-6 h-6" />
+                  <div className="flex items-center gap-4 group cursor-default">
+                    <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-none transform transition-transform group-hover:rotate-180 duration-700">
+                      <Radio className="text-white w-6 h-6" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-serif text-2xl tracking-tighter leading-none text-foreground uppercase italic">StratNode</span>
-                      <span className="text-[8px] font-mono font-bold uppercase tracking-[0.4em] text-foreground/30">Intelligence Systems</span>
+                      <span className="font-serif text-2xl tracking-tighter leading-none text-foreground uppercase italic">TelcoInsight AI</span>
+                      <span className="text-[8px] font-mono font-bold uppercase tracking-[0.4em] text-foreground/30">Strategic Analytics Platform</span>
                     </div>
                   </div>
 
                   <div className="space-y-8">
                     <div className="space-y-4">
-                      <span className="text-primary font-mono font-bold uppercase tracking-[0.4em] text-[10px]">Project_FWA_Genesis</span>
+                      <span className="text-primary font-mono font-bold uppercase tracking-[0.4em] text-[10px]">Strategic_Insight_Protocol_v4</span>
                       <h1 className="text-6xl lg:text-8xl font-serif leading-[0.9] tracking-tighter text-foreground">
-                        DEFINING THE <br/>
-                        <span className="text-primary italic">EDGE LOGIC.</span>
+                        FWA STRATEGIC <br/>
+                        <span className="text-primary italic">ANALYSIS ENGINE.</span>
                       </h1>
                     </div>
                     <p className="text-foreground/60 text-lg lg:text-xl max-w-xl font-medium leading-relaxed tracking-tight">
-                      Architecting spectral deployment roadmaps with high-fidelity grounding. We provide the strategic logic required for global FWA excellence.
+                      Architecting spectral deployment roadmaps with high-fidelity grounding. We provide the strategic logic required for global FWA excellence and network evolution.
                     </p>
                   </div>
 
-                  {/* Relocated Author & Stats Grid */}
+                  {/* Relocated Author & Stats Grid under Welcome Message */}
                   <div className="space-y-6 pt-4 max-w-xl">
                     <div className="bg-white/40 backdrop-blur-xl border border-foreground/5 p-6 flex items-center gap-6 group">
                       <div className="w-14 h-14 bg-foreground/5 flex items-center justify-center rounded-none border border-foreground/5 group-hover:bg-foreground group-hover:text-white transition-all duration-300">
@@ -92,8 +92,8 @@ const App: React.FC = () => {
                       </div>
                       <div className="p-6 bg-muted text-foreground flex flex-col justify-between h-32 group border-b-4 border-primary">
                         <div className="flex justify-between items-start">
-                          <BarChart3 className="w-5 h-5 opacity-30 group-hover:text-primary transition-opacity" />
-                          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-foreground/30">Precision</span>
+                          <Activity className="w-5 h-5 opacity-30 group-hover:text-primary transition-opacity" />
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-foreground/30">Model Precision</span>
                         </div>
                         <div className="text-4xl font-serif italic tracking-tighter leading-none">98.2%</div>
                       </div>
@@ -101,12 +101,12 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right Column: Console Only */}
+                {/* Right Column: Analyzer Console */}
                 <div className="lg:col-span-5 sticky top-12">
                   <div className="bg-muted p-10 border-l-[12px] border-primary">
                     <div className="space-y-8">
                       <div className="flex items-center justify-between border-b border-foreground/5 pb-6">
-                         <h4 className="text-foreground text-3xl font-serif tracking-tighter italic leading-none">Analyzer</h4>
+                         <h4 className="text-foreground text-3xl font-serif tracking-tighter italic leading-none">Initiate</h4>
                          <div className="flex items-center gap-3">
                            <div className="w-2 h-2 bg-secondary animate-pulse" />
                            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.3em] text-foreground/30">Registry_Ready</span>
@@ -126,7 +126,7 @@ const App: React.FC = () => {
             {loading && (
               <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-12">
                  <div className="w-24 h-24 bg-foreground text-white flex items-center justify-center rounded-none animate-pulse">
-                   <Network className="w-10 h-10" />
+                   <Radio className="w-10 h-10" />
                  </div>
                  <div className="space-y-4">
                    <h3 className="text-5xl font-serif text-foreground tracking-tighter italic">Synthesizing Logic...</h3>
