@@ -1,9 +1,7 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 # TelcoInsight AI
 
-# Run and deploy your AI Studio app
 TelcoInsight AI 是一个面向电信行业的 FWA（Fixed Wireless Access，固定无线接入）战略分析 Web 应用。用户输入国家/地区、目标运营商和输出语言后，系统会调用 Gemini 生成结构化战略报告，并在前端以报告、图表和对话助手的形式展示分析结果。
 
 This contains everything you need to run your app locally.
