@@ -7,7 +7,6 @@ TelcoInsight AI 是一个面向电信行业的 FWA（Fixed Wireless Access，固
 This contains everything you need to run your app locally.
 ## 核心能力
 
-View your app in AI Studio: https://ai.studio/apps/drive/1oWZhOsp8GvjhJq_obLKVF9E-KzRi3Xt0
 - **FWA 战略报告生成**：围绕运营商、目标市场、频谱资源、网络建设、商业策略和 ROI 生成完整分析。
 - **双阶段 AI 分析流程**：先生成核心报告，再用审计视角补充专家批判、研究方向和风险提醒。
 - **频谱可视化**：使用 Recharts 展示频段覆盖能力、容量能力、技术制式和部署状态。
